@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: api-transaccional
+  datasource:
+    url: jdbc:postgresql://localhost:5432/db-fintech
+    username: postgres
+    password: postgres
+    driverClassName: org.postgresql.Driver
+  jpa:
+   show-sql: true
+   database: POSTGRESQL
+   hibernate:
+    ddl-auto: create-drop
