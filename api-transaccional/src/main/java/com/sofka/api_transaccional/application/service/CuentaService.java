@@ -26,6 +26,11 @@ public class CuentaService implements CuentaPortIn {
     }
 
     @Override
+    public Optional<Cuenta> buscarCuentaPorNumero(String numeroCuenta) {
+        return cuentaRepositoryPortOut.buscarCuentaPorNumero(numeroCuenta);
+    }
+
+    @Override
     public Cuenta actualizarCuenta(Cuenta cuenta) {
         return cuentaRepositoryPortOut.actualizarCuenta(cuenta);
     }

@@ -6,5 +6,5 @@ public record MovimientoRequestDTO(
         String tipoMovimiento,
         BigDecimal valor,
         BigDecimal saldo,
-        Long cuentaId) {
+        String numeroCuenta) {
 }

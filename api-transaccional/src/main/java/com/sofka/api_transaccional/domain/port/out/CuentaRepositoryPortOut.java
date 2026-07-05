@@ -11,6 +11,8 @@ public interface CuentaRepositoryPortOut {
 
     Optional<Cuenta> buscarCuenta(Long cuentaId);
 
+    Optional<Cuenta> buscarCuentaPorNumero(String numeroCuenta);
+
     Cuenta actualizarCuenta(Cuenta cuenta);
 
     void eliminarCuenta(Long cuentaId);

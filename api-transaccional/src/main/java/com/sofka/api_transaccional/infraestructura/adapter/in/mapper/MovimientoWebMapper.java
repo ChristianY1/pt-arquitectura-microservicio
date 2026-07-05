@@ -14,7 +14,6 @@ public class MovimientoWebMapper {
                 .tipoMovimiento(movimientoRequestDTO.tipoMovimiento())
                 .valor(movimientoRequestDTO.valor())
                 .saldo(movimientoRequestDTO.saldo())
-                .cuentaId(movimientoRequestDTO.cuentaId())
                 .build();
     }
 

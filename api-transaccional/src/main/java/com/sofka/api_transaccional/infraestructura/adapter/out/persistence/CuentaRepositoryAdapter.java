@@ -42,6 +42,12 @@ public class CuentaRepositoryAdapter implements CuentaRepositoryPortOut {
     }
 
     @Override
+    public Optional<Cuenta> buscarCuentaPorNumero(String numeroCuenta) {
+        Optional<CuentaEntity> cuentaEntityOptional = cuentaJpaRepository.findByNumeroCuenta(numeroCuenta);
+        return cuentaEntityOptional.map(cuentaEntity -> cuentaMapper.toDomainCuenta(cuentaEntity));
+    }
+
+    @Override
     public Cuenta actualizarCuenta(Cuenta cuenta) {
         Cuenta cuentaExistente = buscarCuenta(cuenta.getCuentaId())
                 .orElseThrow(() -> new CuentaNoEncontradaException("Cuenta no encontrada"));

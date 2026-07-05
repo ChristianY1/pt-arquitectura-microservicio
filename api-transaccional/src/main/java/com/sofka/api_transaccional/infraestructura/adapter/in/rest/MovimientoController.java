@@ -11,8 +11,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sofka.api_transaccional.domain.exception.CuentaNoEncontradaException;
 import com.sofka.api_transaccional.domain.exception.MovimientoNoEncontradoException;
+import com.sofka.api_transaccional.domain.model.Cuenta;
 import com.sofka.api_transaccional.domain.model.Movimiento;
+import com.sofka.api_transaccional.domain.port.in.CuentaPortIn;
 import com.sofka.api_transaccional.domain.port.in.MovimientoPortIn;
 import com.sofka.api_transaccional.infraestructura.adapter.in.dto.request.MovimientoRequestDTO;
 import com.sofka.api_transaccional.infraestructura.adapter.in.dto.response.ApiResponse;
@@ -25,17 +28,24 @@ public class MovimientoController {
 
     private final MovimientoPortIn movimientoPortIn;
 
+    private final CuentaPortIn cuentaPortIn;
+
     private final MovimientoWebMapper movimientoWebMapper;
 
-    public MovimientoController(MovimientoPortIn movimientoPortIn, MovimientoWebMapper movimientoWebMapper) {
+    public MovimientoController(MovimientoPortIn movimientoPortIn, CuentaPortIn cuentaPortIn, MovimientoWebMapper movimientoWebMapper) {
         this.movimientoPortIn = movimientoPortIn;
+        this.cuentaPortIn = cuentaPortIn;
         this.movimientoWebMapper = movimientoWebMapper;
     }
 
     @PostMapping
     ApiResponse<MovimientoResponseDTO> crearMovimiento(@RequestBody MovimientoRequestDTO movimientoRequestDTO) {
-        Movimiento movimiento = movimientoPortIn.crearMovimiento(movimientoWebMapper.toDomainMovimiento(movimientoRequestDTO));
-        MovimientoResponseDTO movimientoResponse = movimientoWebMapper.toResponseMovimiento(movimiento);
+        Cuenta cuenta = cuentaPortIn.buscarCuentaPorNumero(movimientoRequestDTO.numeroCuenta())
+                .orElseThrow(() -> new CuentaNoEncontradaException("Cuenta no encontrada"));
+        Movimiento movimiento = movimientoWebMapper.toDomainMovimiento(movimientoRequestDTO);
+        movimiento.setCuentaId(cuenta.getCuentaId());
+        Movimiento movimientoCreado = movimientoPortIn.crearMovimiento(movimiento);
+        MovimientoResponseDTO movimientoResponse = movimientoWebMapper.toResponseMovimiento(movimientoCreado);
         return new ApiResponse<>("Movimiento creado exitosamente", movimientoResponse);
     }
 
