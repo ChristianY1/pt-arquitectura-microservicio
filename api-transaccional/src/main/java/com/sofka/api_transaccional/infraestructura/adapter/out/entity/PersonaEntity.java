@@ -2,6 +2,7 @@ package com.sofka.api_transaccional.infraestructura.adapter.out.entity;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
@@ -33,7 +34,10 @@ public class PersonaEntity {
     private String nombre;
     private String genero;
     private int edad;
+
+    @Column(unique = true, length = 10)
     private String identificacion;
+
     private String direccion;
     private String telefono;
 

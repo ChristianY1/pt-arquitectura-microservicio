@@ -10,6 +10,8 @@ public interface ClientePortIn {
 
     Optional<Cliente> buscarCliente(Long clienteId);
 
+    Optional<Cliente> buscarClientePorIdentificacion(String identificacion);
+
     Cliente actualizarCliente(Cliente cliente);
 
     void eliminarCliente(Long clienteId);

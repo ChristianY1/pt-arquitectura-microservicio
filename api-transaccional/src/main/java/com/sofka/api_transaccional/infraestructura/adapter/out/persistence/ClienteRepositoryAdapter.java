@@ -33,6 +33,12 @@ public class ClienteRepositoryAdapter implements ClienteRepositoryPortOut {
     }
 
     @Override
+    public Optional<Cliente> buscarClientePorIdentificacion(String identificacion) {
+        Optional<ClienteEntity> clienteEntityOptional = clienteJpaRepository.findByPersonaEntity_Identificacion(identificacion);
+        return clienteEntityOptional.map(clienteEntity -> clienteMapper.toDomainCliente(clienteEntity));
+    }
+
+    @Override
     public Cliente actualizarCliente(Cliente cliente) {
         Cliente clienteExistente = buscarCliente(cliente.getClienteId())
                 .orElseThrow(() -> new ClienteNoEncontradoException("Cliente no encontrado"));

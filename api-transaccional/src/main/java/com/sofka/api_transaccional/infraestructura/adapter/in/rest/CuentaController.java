@@ -11,8 +11,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sofka.api_transaccional.domain.exception.ClienteNoEncontradoException;
 import com.sofka.api_transaccional.domain.exception.CuentaNoEncontradaException;
+import com.sofka.api_transaccional.domain.model.Cliente;
 import com.sofka.api_transaccional.domain.model.Cuenta;
+import com.sofka.api_transaccional.domain.port.in.ClientePortIn;
 import com.sofka.api_transaccional.domain.port.in.CuentaPortIn;
 import com.sofka.api_transaccional.infraestructura.adapter.in.dto.request.CuentaRequestDTO;
 import com.sofka.api_transaccional.infraestructura.adapter.in.dto.response.ApiResponse;
@@ -25,17 +28,24 @@ public class CuentaController {
 
     private final CuentaPortIn cuentaPortIn;
 
+    private final ClientePortIn clientePortIn;
+
     private final CuentaWebMapper cuentaWebMapper;
 
-    public CuentaController(CuentaPortIn cuentaPortIn, CuentaWebMapper cuentaWebMapper) {
+    public CuentaController(CuentaPortIn cuentaPortIn, ClientePortIn clientePortIn, CuentaWebMapper cuentaWebMapper) {
         this.cuentaPortIn = cuentaPortIn;
+        this.clientePortIn = clientePortIn;
         this.cuentaWebMapper = cuentaWebMapper;
     }
 
     @PostMapping
     ApiResponse<CuentaResponseDTO> crearCuenta(@RequestBody CuentaRequestDTO cuentaRequestDTO) {
-        Cuenta cuenta = cuentaPortIn.crearCuenta(cuentaWebMapper.toDomainCuenta(cuentaRequestDTO));
-        CuentaResponseDTO cuentaResponse = cuentaWebMapper.toResponseCuenta(cuenta);
+        Cliente cliente = clientePortIn.buscarClientePorIdentificacion(cuentaRequestDTO.identificacion())
+                .orElseThrow(() -> new ClienteNoEncontradoException("Cliente no encontrado"));
+        Cuenta cuenta = cuentaWebMapper.toDomainCuenta(cuentaRequestDTO);
+        cuenta.setClienteId(cliente.getClienteId());
+        Cuenta cuentaCreada = cuentaPortIn.crearCuenta(cuenta);
+        CuentaResponseDTO cuentaResponse = cuentaWebMapper.toResponseCuenta(cuentaCreada);
         return new ApiResponse<>("Cuenta creada exitosamente", cuentaResponse);
     }
 

@@ -7,5 +7,5 @@ public record CuentaRequestDTO(
         int tipoCuenta,
         BigDecimal saldoInicial,
         String estado,
-        Long clienteId) {
+        String identificacion) {
 }
