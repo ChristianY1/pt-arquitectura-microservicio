@@ -34,9 +34,9 @@ public class ClienteRepositoryAdapter implements ClienteRepositoryPortOut {
 
     @Override
     public Cliente actualizarCliente(Cliente cliente) {
-        if (buscarCliente(cliente.getClienteId()).isEmpty()) {
-            throw new ClienteNoEncontradoException("Cliente no encontrado");
-        }
+        Cliente clienteExistente = buscarCliente(cliente.getClienteId())
+                .orElseThrow(() -> new ClienteNoEncontradoException("Cliente no encontrado"));
+        cliente.setPersonaId(clienteExistente.getPersonaId());
         ClienteEntity clienteEntity = clienteMapper.toEntityCliente(cliente);
         return clienteMapper.toDomainCliente(clienteJpaRepository.save(clienteEntity));
     }
@@ -46,6 +46,7 @@ public class ClienteRepositoryAdapter implements ClienteRepositoryPortOut {
         if (buscarCliente(clienteId).isEmpty()) {
             throw new ClienteNoEncontradoException("Cliente no encontrado");
         }
+        
         clienteJpaRepository.deleteById(clienteId);
     }
 

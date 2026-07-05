@@ -1,41 +1,53 @@
 package com.sofka.api_transaccional.infraestructura.adapter.out.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.sofka.api_transaccional.domain.model.TipoCuenta;
+
 @Entity
-@Table(name = "PERSONAS")
+@Table(name = "CUENTAS")
 @Getter
 @Setter
-@SuperBuilder
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class PersonaEntity {
+public class CuentaEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long personaId;
-    private String nombre;
-    private String genero;
-    private int edad;
-    private String identificacion;
-    private String direccion;
-    private String telefono;
+    private Long cuentaId;
+    private String numeroCuenta;
+
+    @Enumerated(EnumType.STRING)
+    private TipoCuenta tipoCuenta;
+
+    private BigDecimal saldoInicial;
+    private String estado;
+
+    @ManyToOne
+    @JoinColumn(name = "cliente_id")
+    private ClienteEntity clienteEntity;
 
     @CreatedDate
     private LocalDateTime fechaCreacion;

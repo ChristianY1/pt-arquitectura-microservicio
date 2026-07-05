@@ -45,7 +45,7 @@ public class ClienteController {
         return new ApiResponse<>("Cliente encontrado", clienteResponse);
     }
 
-    @PutMapping("/{clienteId}")
+    @PutMapping("/actualizar/{clienteId}")
     ApiResponse<ClienteResponseDTO> actualizarCliente(@PathVariable Long clienteId, @RequestBody ClienteRequestDTO clienteRequestDTO){
         Cliente cliente = clienteWebMapper.toDomainCliente(clienteRequestDTO);
         cliente.setClienteId(clienteId);
@@ -54,7 +54,7 @@ public class ClienteController {
         return new ApiResponse<>("Cliente actualizado exitosamente", clienteResponse);
     }
 
-    @DeleteMapping("/{clienteId}")
+    @DeleteMapping("/eliminar/{clienteId}")
     ApiResponse<Void> eliminarCliente(@PathVariable Long clienteId){
         clientePortIn.eliminarCliente(clienteId);
         return new ApiResponse<>("Cliente eliminado exitosamente", null);
