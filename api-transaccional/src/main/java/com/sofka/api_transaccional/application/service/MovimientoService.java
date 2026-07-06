@@ -4,11 +4,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
 import com.sofka.api_transaccional.domain.model.Cuenta;
 import com.sofka.api_transaccional.domain.model.Movimiento;
+import com.sofka.api_transaccional.domain.model.ReporteMovimiento;
 import com.sofka.api_transaccional.domain.port.in.MovimientoPortIn;
 import com.sofka.api_transaccional.domain.port.out.CuentaRepositoryPortOut;
 import com.sofka.api_transaccional.domain.port.out.MovimientoRepositoryPortOut;
@@ -65,6 +68,14 @@ public class MovimientoService implements MovimientoPortIn {
     @Override
     public List<Movimiento> listarMovimientosPorCuenta(Long cuentaId) {
         return movimientoRepositoryPortOut.listarMovimientosPorCuenta(cuentaId);
+    }
+
+    @Override
+    public List<ReporteMovimiento> buscarReporteMovimientos(String identificacion, LocalDateTime desde, LocalDateTime hasta) {
+        if (ChronoUnit.DAYS.between(desde, hasta) > 30) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El rango de fechas no puede ser mayor a 30 días");
+        }
+        return movimientoRepositoryPortOut.buscarReporteMovimientos(identificacion, desde, hasta);
     }
 
 }

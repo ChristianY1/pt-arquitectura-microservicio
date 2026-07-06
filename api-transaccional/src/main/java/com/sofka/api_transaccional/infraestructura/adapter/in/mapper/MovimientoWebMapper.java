@@ -8,9 +8,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.sofka.api_transaccional.domain.model.Movimiento;
+import com.sofka.api_transaccional.domain.model.ReporteMovimiento;
 import com.sofka.api_transaccional.domain.model.TipoMovimiento;
 import com.sofka.api_transaccional.infraestructura.adapter.in.dto.request.MovimientoRequestDTO;
 import com.sofka.api_transaccional.infraestructura.adapter.in.dto.response.MovimientoResponseDTO;
+import com.sofka.api_transaccional.infraestructura.adapter.in.dto.response.ReportesMovimientosDto;
 
 public class MovimientoWebMapper {
 
@@ -33,6 +35,18 @@ public class MovimientoWebMapper {
                 movimiento.getTipoMovimiento().getDescripcion(),
                 movimiento.getValor(),
                 movimiento.getSaldoDisponible());
+    }
+
+    public ReportesMovimientosDto toResponseReporteMovimiento(ReporteMovimiento reporteMovimiento) {
+        return new ReportesMovimientosDto(
+                reporteMovimiento.getFechaMovimiento(),
+                reporteMovimiento.getNombre(),
+                reporteMovimiento.getNumeroCuenta(),
+                reporteMovimiento.getTipoCuenta(),
+                reporteMovimiento.getSaldoInicial(),
+                reporteMovimiento.isEstado(),
+                reporteMovimiento.getValor(),
+                reporteMovimiento.getSaldoDisponible());
     }
 
 }

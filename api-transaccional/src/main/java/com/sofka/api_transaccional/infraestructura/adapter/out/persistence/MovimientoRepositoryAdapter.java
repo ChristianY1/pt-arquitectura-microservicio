@@ -3,10 +3,12 @@ package com.sofka.api_transaccional.infraestructura.adapter.out.persistence;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import com.sofka.api_transaccional.domain.model.Movimiento;
+import com.sofka.api_transaccional.domain.model.ReporteMovimiento;
 import com.sofka.api_transaccional.domain.port.out.MovimientoRepositoryPortOut;
 import com.sofka.api_transaccional.infraestructura.adapter.out.entity.MovimientoEntity;
 import com.sofka.api_transaccional.infraestructura.adapter.out.mapper.MovimientoMapper;
@@ -72,6 +74,14 @@ public class MovimientoRepositoryAdapter implements MovimientoRepositoryPortOut 
     public Optional<Movimiento> buscarUltimoMovimientoPorCuenta(Long cuentaId) {
         Optional<MovimientoEntity> movimientoEntityOptional = movimientoJpaRepository.buscarUltimoMovimientoPorCuenta(cuentaId);
         return movimientoEntityOptional.map(movimientoEntity -> movimientoMapper.toDomainMovimiento(movimientoEntity));
+    }
+
+    @Override
+    public List<ReporteMovimiento> buscarReporteMovimientos(String identificacion, LocalDateTime desde, LocalDateTime hasta) {
+        return movimientoJpaRepository.buscarReporteMovimientos(identificacion, desde, hasta)
+                .stream()
+                .map(reporteMovimientoProjection -> movimientoMapper.toDomainReporteMovimiento(reporteMovimientoProjection))
+                .toList();
     }
 
 }

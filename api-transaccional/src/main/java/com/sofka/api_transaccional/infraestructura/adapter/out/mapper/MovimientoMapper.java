@@ -1,8 +1,10 @@
 package com.sofka.api_transaccional.infraestructura.adapter.out.mapper;
 
 import com.sofka.api_transaccional.domain.model.Movimiento;
+import com.sofka.api_transaccional.domain.model.ReporteMovimiento;
 import com.sofka.api_transaccional.infraestructura.adapter.out.entity.CuentaEntity;
 import com.sofka.api_transaccional.infraestructura.adapter.out.entity.MovimientoEntity;
+import com.sofka.api_transaccional.infraestructura.adapter.out.dto.ReporteMovimientoDTO;
 
 public class MovimientoMapper {
 
@@ -28,6 +30,19 @@ public class MovimientoMapper {
                 .valor(movimiento.getValor())
                 .saldoDisponible(movimiento.getSaldoDisponible())
                 .cuentaEntity(cuentaEntity)
+                .build();
+    }
+
+    public ReporteMovimiento toDomainReporteMovimiento(ReporteMovimientoDTO reporteMovimientoProjection) {
+        return ReporteMovimiento.builder()
+                .fechaMovimiento(reporteMovimientoProjection.getFechaMovimiento())
+                .nombre(reporteMovimientoProjection.getNombre())
+                .numeroCuenta(reporteMovimientoProjection.getNumeroCuenta())
+                .tipoCuenta(reporteMovimientoProjection.getTipoCuenta())
+                .saldoInicial(reporteMovimientoProjection.getSaldoInicial())
+                .estado(reporteMovimientoProjection.isEstado())
+                .valor(reporteMovimientoProjection.getValor())
+                .saldoDisponible(reporteMovimientoProjection.getSaldoDisponible())
                 .build();
     }
 

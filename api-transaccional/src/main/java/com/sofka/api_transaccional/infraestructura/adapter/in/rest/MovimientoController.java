@@ -1,8 +1,12 @@
 package com.sofka.api_transaccional.infraestructura.adapter.in.rest;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -21,6 +26,7 @@ import com.sofka.api_transaccional.domain.port.in.CuentaPortIn;
 import com.sofka.api_transaccional.domain.port.in.MovimientoPortIn;
 import com.sofka.api_transaccional.infraestructura.adapter.in.dto.request.MovimientoRequestDTO;
 import com.sofka.api_transaccional.infraestructura.adapter.in.dto.response.MovimientoResponseDTO;
+import com.sofka.api_transaccional.infraestructura.adapter.in.dto.response.ReportesMovimientosDto;
 import com.sofka.api_transaccional.infraestructura.adapter.in.mapper.MovimientoWebMapper;
 
 @RestController
@@ -80,6 +86,20 @@ public class MovimientoController {
                 .map(movimiento -> movimientoWebMapper.toResponseMovimiento(movimiento))
                 .toList();
         return ResponseBuilder.build(HttpStatus.OK, "Movimientos encontrados", movimientos);
+    }
+
+    @GetMapping("/reportes")
+    ResponseEntity<Map<String, Object>> reportesMovimientos(
+            @RequestParam String identificacion,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate desde,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate hasta) {
+        LocalDateTime desdeFechaHora = desde.atStartOfDay();
+        LocalDateTime hastaFechaHora = hasta.atTime(LocalTime.MAX);
+        List<ReportesMovimientosDto> reporte = movimientoPortIn.buscarReporteMovimientos(identificacion, desdeFechaHora, hastaFechaHora)
+                .stream()
+                .map(reporteMovimiento -> movimientoWebMapper.toResponseReporteMovimiento(reporteMovimiento))
+                .toList();
+        return ResponseBuilder.build(HttpStatus.OK, "Reporte de movimientos generado exitosamente", reporte);
     }
 
 }
