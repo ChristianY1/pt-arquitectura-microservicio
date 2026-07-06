@@ -33,16 +33,16 @@ public class MovimientoMapper {
                 .build();
     }
 
-    public ReporteMovimiento toDomainReporteMovimiento(ReporteMovimientoDTO reporteMovimientoProjection) {
+    public ReporteMovimiento toDomainReporteMovimiento(ReporteMovimientoDTO reporteMovimientoDTO) {
         return ReporteMovimiento.builder()
-                .fechaMovimiento(reporteMovimientoProjection.getFechaMovimiento())
-                .nombre(reporteMovimientoProjection.getNombre())
-                .numeroCuenta(reporteMovimientoProjection.getNumeroCuenta())
-                .tipoCuenta(reporteMovimientoProjection.getTipoCuenta())
-                .saldoInicial(reporteMovimientoProjection.getSaldoInicial())
-                .estado(reporteMovimientoProjection.isEstado())
-                .valor(reporteMovimientoProjection.getValor())
-                .saldoDisponible(reporteMovimientoProjection.getSaldoDisponible())
+                .fechaMovimiento(reporteMovimientoDTO.getFechaMovimiento())
+                .nombre(reporteMovimientoDTO.getNombre())
+                .numeroCuenta(reporteMovimientoDTO.getNumeroCuenta())
+                .tipoCuenta(reporteMovimientoDTO.getTipoCuenta())
+                .saldoInicial(reporteMovimientoDTO.getSaldoInicial())
+                .estado(reporteMovimientoDTO.isEstado())
+                .valor(reporteMovimientoDTO.getValor())
+                .saldoDisponible(reporteMovimientoDTO.getSaldoDisponible())
                 .build();
     }
 

@@ -131,7 +131,7 @@ public class MovimientoRepositoryAdapter implements MovimientoRepositoryPortOut 
     public List<ReporteMovimiento> buscarReporteMovimientos(String identificacion, LocalDateTime desde, LocalDateTime hasta) {
         return movimientoJpaRepository.buscarReporteMovimientos(identificacion, desde, hasta)
                 .stream()
-                .map(reporteMovimientoProjection -> movimientoMapper.toDomainReporteMovimiento(reporteMovimientoProjection))
+                .map(reporteMovimientoDTO -> movimientoMapper.toDomainReporteMovimiento(reporteMovimientoDTO))
                 .toList();
     }
 
