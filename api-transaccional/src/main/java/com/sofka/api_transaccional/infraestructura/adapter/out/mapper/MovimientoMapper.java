@@ -9,10 +9,10 @@ public class MovimientoMapper {
     public Movimiento toDomainMovimiento(MovimientoEntity movimientoEntity) {
         return Movimiento.builder()
                 .movimientoId(movimientoEntity.getMovimientoId())
-                .fecha(movimientoEntity.getFecha())
+                .fechaMovimiento(movimientoEntity.getFechaMovimiento())
                 .tipoMovimiento(movimientoEntity.getTipoMovimiento())
                 .valor(movimientoEntity.getValor())
-                .saldo(movimientoEntity.getSaldo())
+                .saldoDisponible(movimientoEntity.getSaldoDisponible())
                 .cuentaId(movimientoEntity.getCuentaEntity() != null ? movimientoEntity.getCuentaEntity().getCuentaId() : null)
                 .build();
     }
@@ -23,10 +23,10 @@ public class MovimientoMapper {
                 .build();
         return MovimientoEntity.builder()
                 .movimientoId(movimiento.getMovimientoId())
-                .fecha(movimiento.getFecha())
+                .fechaMovimiento(movimiento.getFechaMovimiento())
                 .tipoMovimiento(movimiento.getTipoMovimiento())
                 .valor(movimiento.getValor())
-                .saldo(movimiento.getSaldo())
+                .saldoDisponible(movimiento.getSaldoDisponible())
                 .cuentaEntity(cuentaEntity)
                 .build();
     }

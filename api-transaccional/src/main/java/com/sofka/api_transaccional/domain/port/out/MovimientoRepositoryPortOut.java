@@ -17,4 +17,6 @@ public interface MovimientoRepositoryPortOut {
 
     List<Movimiento> listarMovimientosPorCuenta(Long cuentaId);
 
+    Optional<Movimiento> buscarUltimoMovimientoPorCuenta(Long cuentaId);
+
 }

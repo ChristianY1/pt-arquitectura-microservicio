@@ -17,10 +17,10 @@ import lombok.Setter;
 public class Movimiento {
 
     private Long movimientoId;
-    private LocalDateTime fecha;
+    private LocalDateTime fechaMovimiento;
     private TipoMovimiento tipoMovimiento;
     private BigDecimal valor;
-    private BigDecimal saldo;
+    private BigDecimal saldoDisponible;
     private Long cuentaId;
 
 }

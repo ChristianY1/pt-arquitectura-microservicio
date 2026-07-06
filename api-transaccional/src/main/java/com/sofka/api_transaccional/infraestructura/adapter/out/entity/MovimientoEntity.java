@@ -37,13 +37,13 @@ public class MovimientoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long movimientoId;
-    private LocalDateTime fecha;
+    private LocalDateTime fechaMovimiento;
 
     @Enumerated(EnumType.STRING)
     private TipoMovimiento tipoMovimiento;
 
     private BigDecimal valor;
-    private BigDecimal saldo;
+    private BigDecimal saldoDisponible;
 
     @ManyToOne
     @JoinColumn(name = "cuenta_id")

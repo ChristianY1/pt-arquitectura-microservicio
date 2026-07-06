@@ -47,7 +47,7 @@ public class MovimientoRepositoryAdapter implements MovimientoRepositoryPortOut 
         Movimiento movimientoExistente = buscarMovimiento(movimiento.getMovimientoId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Movimiento no encontrado"));
         movimiento.setCuentaId(movimientoExistente.getCuentaId());
-        movimiento.setSaldo(movimientoExistente.getSaldo());
+        movimiento.setSaldoDisponible(movimientoExistente.getSaldoDisponible());
         MovimientoEntity movimientoEntity = movimientoMapper.toEntityMovimiento(movimiento);
         return movimientoMapper.toDomainMovimiento(movimientoJpaRepository.save(movimientoEntity));
     }
@@ -66,6 +66,12 @@ public class MovimientoRepositoryAdapter implements MovimientoRepositoryPortOut 
                 .stream()
                 .map(movimientoEntity -> movimientoMapper.toDomainMovimiento(movimientoEntity))
                 .toList();
+    }
+
+    @Override
+    public Optional<Movimiento> buscarUltimoMovimientoPorCuenta(Long cuentaId) {
+        Optional<MovimientoEntity> movimientoEntityOptional = movimientoJpaRepository.buscarUltimoMovimientoPorCuenta(cuentaId);
+        return movimientoEntityOptional.map(movimientoEntity -> movimientoMapper.toDomainMovimiento(movimientoEntity));
     }
 
 }

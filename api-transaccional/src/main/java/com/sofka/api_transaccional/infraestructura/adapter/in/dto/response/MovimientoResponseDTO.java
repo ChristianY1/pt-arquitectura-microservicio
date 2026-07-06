@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public record MovimientoResponseDTO(
-                LocalDateTime fecha,
+                LocalDateTime fechaMovimiento,
                 String tipoMovimiento,
                 BigDecimal valor,
-                BigDecimal saldo) {
+                BigDecimal saldoDisponible) {
 }

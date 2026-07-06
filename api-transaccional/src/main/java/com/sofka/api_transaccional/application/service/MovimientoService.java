@@ -29,19 +29,18 @@ public class MovimientoService implements MovimientoPortIn {
         Cuenta cuenta = cuentaRepositoryPortOut.buscarCuenta(movimiento.getCuentaId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cuenta no encontrada"));
 
-        BigDecimal nuevoSaldo = cuenta.getSaldoInicial().add(movimiento.getValor());
+        BigDecimal saldoBase = movimientoRepositoryPortOut.buscarUltimoMovimientoPorCuenta(movimiento.getCuentaId())
+                .map(ultimoMovimiento -> ultimoMovimiento.getSaldoDisponible())
+                .orElse(cuenta.getSaldoInicial());
 
-        if (nuevoSaldo.compareTo(BigDecimal.ZERO) < 0) {
+        BigDecimal nuevoSaldoDisponible = saldoBase.add(movimiento.getValor());
+
+        if (nuevoSaldoDisponible.compareTo(BigDecimal.ZERO) < 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Saldo no disponible");
         }
 
-        movimiento.setSaldo(nuevoSaldo);
-        Movimiento movimientoCreado = movimientoRepositoryPortOut.crearMovimiento(movimiento);
-
-        cuenta.setSaldoInicial(nuevoSaldo);
-        cuentaRepositoryPortOut.actualizarCuenta(cuenta);
-
-        return movimientoCreado;
+        movimiento.setSaldoDisponible(nuevoSaldoDisponible);
+        return movimientoRepositoryPortOut.crearMovimiento(movimiento);
     }
 
     @Override
