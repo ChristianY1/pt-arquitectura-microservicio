@@ -24,7 +24,7 @@ public class ClienteWebMapper {
     public ClienteResponseDTO toResponseCliente(Cliente cliente) {
         return new ClienteResponseDTO(
                 cliente.getUsuario(),
-                cliente.getEstado(),
+                cliente.isEstado(),
                 cliente.getNombre(),
                 cliente.getGenero(),
                 cliente.getEdad(),

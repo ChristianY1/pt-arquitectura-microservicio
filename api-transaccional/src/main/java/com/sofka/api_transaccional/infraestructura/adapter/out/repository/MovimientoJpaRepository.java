@@ -16,7 +16,7 @@ public interface MovimientoJpaRepository extends JpaRepository<MovimientoEntity,
     @Query(value = """
             SELECT *
             FROM movimientos
-            WHERE cuenta_id = :cuentaId
+            WHERE fk_cuenta_id = :cuentaId
             ORDER BY movimiento_id DESC
             LIMIT 1
             """, nativeQuery = true)

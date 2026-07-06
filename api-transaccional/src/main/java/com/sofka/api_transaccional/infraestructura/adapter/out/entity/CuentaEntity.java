@@ -46,10 +46,10 @@ public class CuentaEntity {
     private TipoCuenta tipoCuenta;
 
     private BigDecimal saldoInicial;
-    private String estado;
+    private boolean estado;
 
     @ManyToOne
-    @JoinColumn(name = "cliente_id")
+    @JoinColumn(name = "fk_cliente_id")
     private ClienteEntity clienteEntity;
 
     @CreatedDate

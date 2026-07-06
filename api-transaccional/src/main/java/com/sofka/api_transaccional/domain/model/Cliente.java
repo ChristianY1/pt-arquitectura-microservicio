@@ -16,7 +16,7 @@ public class Cliente extends Persona {
     private Long clienteId;
     private String usuario;
     private String contrasenia;
-    private String estado;
+    private boolean estado;
 
 
 }

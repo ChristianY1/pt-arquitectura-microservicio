@@ -2,7 +2,7 @@ package com.sofka.api_transaccional.infraestructura.adapter.in.dto.response;
 
 public record ClienteResponseDTO(
         String usuario,
-        String estado,
+        boolean estado,
         String nombre,
         String genero,
         int edad,

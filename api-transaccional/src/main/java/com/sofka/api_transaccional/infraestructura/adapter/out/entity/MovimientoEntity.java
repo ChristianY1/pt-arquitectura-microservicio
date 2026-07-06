@@ -46,7 +46,7 @@ public class MovimientoEntity {
     private BigDecimal saldoDisponible;
 
     @ManyToOne
-    @JoinColumn(name = "cuenta_id")
+    @JoinColumn(name = "fk_cuenta_id")
     private CuentaEntity cuentaEntity;
 
     @CreatedDate

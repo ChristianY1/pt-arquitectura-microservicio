@@ -6,5 +6,5 @@ public record CuentaResponseDTO(
         String numeroCuenta,
         int tipoCuenta,
         BigDecimal saldoInicial,
-        String estado) {
+        boolean estado) {
 }

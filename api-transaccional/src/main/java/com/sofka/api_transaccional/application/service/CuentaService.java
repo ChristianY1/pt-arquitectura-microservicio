@@ -6,16 +6,21 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.Optional;
 
+import com.sofka.api_transaccional.domain.model.Cliente;
 import com.sofka.api_transaccional.domain.model.Cuenta;
 import com.sofka.api_transaccional.domain.port.in.CuentaPortIn;
+import com.sofka.api_transaccional.domain.port.out.ClienteRepositoryPortOut;
 import com.sofka.api_transaccional.domain.port.out.CuentaRepositoryPortOut;
 
 public class CuentaService implements CuentaPortIn {
 
     private final CuentaRepositoryPortOut cuentaRepositoryPortOut;
 
-    public CuentaService(CuentaRepositoryPortOut cuentaRepositoryPortOut) {
+    private final ClienteRepositoryPortOut clienteRepositoryPortOut;
+
+    public CuentaService(CuentaRepositoryPortOut cuentaRepositoryPortOut, ClienteRepositoryPortOut clienteRepositoryPortOut) {
         this.cuentaRepositoryPortOut = cuentaRepositoryPortOut;
+        this.clienteRepositoryPortOut = clienteRepositoryPortOut;
     }
 
     @Override
@@ -23,6 +28,11 @@ public class CuentaService implements CuentaPortIn {
         validarNumeroCuenta(cuenta.getNumeroCuenta());
         if (cuentaRepositoryPortOut.buscarCuentaPorNumero(cuenta.getNumeroCuenta()).isPresent()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ya existe una cuenta con este número");
+        }
+        Cliente cliente = clienteRepositoryPortOut.buscarCliente(cuenta.getClienteId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente no encontrado"));
+        if (!cliente.isEstado()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El cliente no está activo");
         }
         return cuentaRepositoryPortOut.crearCuenta(cuenta);
     }

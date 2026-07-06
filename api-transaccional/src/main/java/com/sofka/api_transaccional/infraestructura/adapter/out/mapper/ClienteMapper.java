@@ -19,7 +19,7 @@ public class ClienteMapper {
                 .clienteId(clienteEntity.getClienteId())
                 .usuario(clienteEntity.getUsuario())
                 .contrasenia(clienteEntity.getContrasenia())
-                .estado(clienteEntity.getEstado())
+                .estado(clienteEntity.isEstado())
                 .personaId(persona.getPersonaId())
                 .nombre(persona.getNombre())
                 .genero(persona.getGenero())
@@ -44,7 +44,7 @@ public class ClienteMapper {
                 .clienteId(cliente.getClienteId())
                 .usuario(cliente.getUsuario())
                 .contrasenia(cliente.getContrasenia())
-                .estado(cliente.getEstado())
+                .estado(cliente.isEstado())
                 .personaEntity(personaEntity)
                 .build();
 

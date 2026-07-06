@@ -58,8 +58,8 @@ public class BeanConfig {
     }
 
     @Bean
-    CuentaPortIn cuenta(CuentaRepositoryPortOut cuentaRepositoryPortOut){
-        return new CuentaService(cuentaRepositoryPortOut);
+    CuentaPortIn cuenta(CuentaRepositoryPortOut cuentaRepositoryPortOut, ClienteRepositoryPortOut clienteRepositoryPortOut){
+        return new CuentaService(cuentaRepositoryPortOut, clienteRepositoryPortOut);
     }
 
     @Bean

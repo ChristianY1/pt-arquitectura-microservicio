@@ -6,6 +6,6 @@ public record CuentaRequestDTO(
         String numeroCuenta,
         int tipoCuenta,
         BigDecimal saldoInicial,
-        String estado,
+        boolean estado,
         String identificacion) {
 }

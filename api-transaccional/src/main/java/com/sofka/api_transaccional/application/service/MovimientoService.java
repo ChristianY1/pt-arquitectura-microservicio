@@ -29,6 +29,10 @@ public class MovimientoService implements MovimientoPortIn {
         Cuenta cuenta = cuentaRepositoryPortOut.buscarCuenta(movimiento.getCuentaId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cuenta no encontrada"));
 
+        if (!cuenta.isEstado()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La cuenta no está activa");
+        }
+
         BigDecimal saldoBase = movimientoRepositoryPortOut.buscarUltimoMovimientoPorCuenta(movimiento.getCuentaId())
                 .map(ultimoMovimiento -> ultimoMovimiento.getSaldoDisponible())
                 .orElse(cuenta.getSaldoInicial());

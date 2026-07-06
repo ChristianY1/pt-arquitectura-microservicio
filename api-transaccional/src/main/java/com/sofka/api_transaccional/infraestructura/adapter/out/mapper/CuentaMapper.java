@@ -12,7 +12,7 @@ public class CuentaMapper {
                 .numeroCuenta(cuentaEntity.getNumeroCuenta())
                 .tipoCuenta(cuentaEntity.getTipoCuenta())
                 .saldoInicial(cuentaEntity.getSaldoInicial())
-                .estado(cuentaEntity.getEstado())
+                .estado(cuentaEntity.isEstado())
                 .clienteId(cuentaEntity.getClienteEntity() != null ? cuentaEntity.getClienteEntity().getClienteId() : null)
                 .build();
     }
@@ -26,7 +26,7 @@ public class CuentaMapper {
                 .numeroCuenta(cuenta.getNumeroCuenta())
                 .tipoCuenta(cuenta.getTipoCuenta())
                 .saldoInicial(cuenta.getSaldoInicial())
-                .estado(cuenta.getEstado())
+                .estado(cuenta.isEstado())
                 .clienteEntity(clienteEntity)
                 .build();
     }

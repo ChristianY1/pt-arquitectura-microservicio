@@ -21,7 +21,7 @@ public class CuentaWebMapper {
                 cuenta.getNumeroCuenta(),
                 cuenta.getTipoCuenta().getCodigo(),
                 cuenta.getSaldoInicial(),
-                cuenta.getEstado());
+                cuenta.isEstado());
     }
 
 }
