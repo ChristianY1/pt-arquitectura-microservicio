@@ -18,7 +18,7 @@ public class Movimiento {
 
     private Long movimientoId;
     private LocalDateTime fecha;
-    private String tipoMovimiento;
+    private TipoMovimiento tipoMovimiento;
     private BigDecimal valor;
     private BigDecimal saldo;
     private Long cuentaId;

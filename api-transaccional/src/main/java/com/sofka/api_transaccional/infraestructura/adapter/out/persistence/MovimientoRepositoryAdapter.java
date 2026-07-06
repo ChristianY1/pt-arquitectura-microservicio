@@ -46,6 +46,7 @@ public class MovimientoRepositoryAdapter implements MovimientoRepositoryPortOut 
         Movimiento movimientoExistente = buscarMovimiento(movimiento.getMovimientoId())
                 .orElseThrow(() -> new MovimientoNoEncontradoException("Movimiento no encontrado"));
         movimiento.setCuentaId(movimientoExistente.getCuentaId());
+        movimiento.setSaldo(movimientoExistente.getSaldo());
         MovimientoEntity movimientoEntity = movimientoMapper.toEntityMovimiento(movimiento);
         return movimientoMapper.toDomainMovimiento(movimientoJpaRepository.save(movimientoEntity));
     }

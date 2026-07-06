@@ -78,8 +78,8 @@ public class BeanConfig {
     }
 
     @Bean
-    MovimientoPortIn movimiento(MovimientoRepositoryPortOut movimientoRepositoryPortOut){
-        return new MovimientoService(movimientoRepositoryPortOut);
+    MovimientoPortIn movimiento(MovimientoRepositoryPortOut movimientoRepositoryPortOut, CuentaRepositoryPortOut cuentaRepositoryPortOut){
+        return new MovimientoService(movimientoRepositoryPortOut, cuentaRepositoryPortOut);
     }
 
     @Bean

@@ -1,23 +1,46 @@
 package com.sofka.api_transaccional.application.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
+import com.sofka.api_transaccional.domain.exception.CuentaNoEncontradaException;
+import com.sofka.api_transaccional.domain.exception.SaldoNoDisponibleException;
+import com.sofka.api_transaccional.domain.model.Cuenta;
 import com.sofka.api_transaccional.domain.model.Movimiento;
 import com.sofka.api_transaccional.domain.port.in.MovimientoPortIn;
+import com.sofka.api_transaccional.domain.port.out.CuentaRepositoryPortOut;
 import com.sofka.api_transaccional.domain.port.out.MovimientoRepositoryPortOut;
 
 public class MovimientoService implements MovimientoPortIn {
 
     private final MovimientoRepositoryPortOut movimientoRepositoryPortOut;
 
-    public MovimientoService(MovimientoRepositoryPortOut movimientoRepositoryPortOut) {
+    private final CuentaRepositoryPortOut cuentaRepositoryPortOut;
+
+    public MovimientoService(MovimientoRepositoryPortOut movimientoRepositoryPortOut, CuentaRepositoryPortOut cuentaRepositoryPortOut) {
         this.movimientoRepositoryPortOut = movimientoRepositoryPortOut;
+        this.cuentaRepositoryPortOut = cuentaRepositoryPortOut;
     }
 
     @Override
     public Movimiento crearMovimiento(Movimiento movimiento) {
-        return movimientoRepositoryPortOut.crearMovimiento(movimiento);
+        Cuenta cuenta = cuentaRepositoryPortOut.buscarCuenta(movimiento.getCuentaId())
+                .orElseThrow(() -> new CuentaNoEncontradaException("Cuenta no encontrada"));
+
+        BigDecimal nuevoSaldo = cuenta.getSaldoInicial().add(movimiento.getValor());
+
+        if (nuevoSaldo.compareTo(BigDecimal.ZERO) < 0) {
+            throw new SaldoNoDisponibleException("Saldo no disponible");
+        }
+
+        movimiento.setSaldo(nuevoSaldo);
+        Movimiento movimientoCreado = movimientoRepositoryPortOut.crearMovimiento(movimiento);
+
+        cuenta.setSaldoInicial(nuevoSaldo);
+        cuentaRepositoryPortOut.actualizarCuenta(cuenta);
+
+        return movimientoCreado;
     }
 
     @Override

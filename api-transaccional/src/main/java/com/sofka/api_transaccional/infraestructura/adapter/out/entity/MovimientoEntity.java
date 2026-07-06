@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -20,6 +22,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.sofka.api_transaccional.domain.model.TipoMovimiento;
+
 @Entity
 @Table(name = "MOVIMIENTOS")
 @Getter
@@ -34,7 +38,10 @@ public class MovimientoEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long movimientoId;
     private LocalDateTime fecha;
-    private String tipoMovimiento;
+
+    @Enumerated(EnumType.STRING)
+    private TipoMovimiento tipoMovimiento;
+
     private BigDecimal valor;
     private BigDecimal saldo;
 
