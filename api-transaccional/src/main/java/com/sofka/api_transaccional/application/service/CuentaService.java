@@ -1,9 +1,11 @@
 package com.sofka.api_transaccional.application.service;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.List;
 import java.util.Optional;
 
-import com.sofka.api_transaccional.domain.exception.NumeroCuentaNoValidoException;
 import com.sofka.api_transaccional.domain.model.Cuenta;
 import com.sofka.api_transaccional.domain.port.in.CuentaPortIn;
 import com.sofka.api_transaccional.domain.port.out.CuentaRepositoryPortOut;
@@ -50,7 +52,7 @@ public class CuentaService implements CuentaPortIn {
 
     private void validarNumeroCuenta(String numeroCuenta) {
         if (numeroCuenta == null || numeroCuenta.isBlank()) {
-            throw new NumeroCuentaNoValidoException("El número de cuenta es obligatorio");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El número de cuenta es obligatorio");
         }
     }
 

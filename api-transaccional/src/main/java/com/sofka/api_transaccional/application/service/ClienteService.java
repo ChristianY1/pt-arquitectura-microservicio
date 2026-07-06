@@ -1,8 +1,10 @@
 package com.sofka.api_transaccional.application.service;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.Optional;
 
-import com.sofka.api_transaccional.domain.exception.IdentificacionNoValidaException;
 import com.sofka.api_transaccional.domain.model.Cliente;
 import com.sofka.api_transaccional.domain.port.in.ClientePortIn;
 import com.sofka.api_transaccional.domain.port.out.ClienteRepositoryPortOut;
@@ -46,7 +48,7 @@ public class ClienteService implements ClientePortIn {
 
     private void validarIdentificacion(String identificacion) {
         if (identificacion == null || identificacion.length() != LONGITUD_IDENTIFICACION) {
-            throw new IdentificacionNoValidaException("Cédula no válida");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cédula no válida");
         }
     }
 

@@ -1,5 +1,8 @@
 package com.sofka.api_transaccional.infraestructura.adapter.in.rest;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sofka.api_transaccional.domain.exception.ClienteNoEncontradoException;
 import com.sofka.api_transaccional.domain.model.Cliente;
 import com.sofka.api_transaccional.domain.port.in.ClientePortIn;
 import com.sofka.api_transaccional.infraestructura.adapter.in.dto.request.ClienteRequestDTO;
@@ -40,7 +42,7 @@ public class ClienteController {
     @GetMapping("/{clienteId}")
     ApiResponse<ClienteResponseDTO> buscarCliente(@PathVariable Long clienteId){
         Cliente cliente = clientePortIn.buscarCliente(clienteId)
-                .orElseThrow(() -> new ClienteNoEncontradoException("Cliente no encontrado"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente no encontrado"));
         ClienteResponseDTO clienteResponse = clienteWebMapper.toResponseCliente(cliente);
         return new ApiResponse<>("Cliente encontrado", clienteResponse);
     }

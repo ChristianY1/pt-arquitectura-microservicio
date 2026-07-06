@@ -1,10 +1,11 @@
 package com.sofka.api_transaccional.infraestructura.adapter.out.persistence;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.List;
 import java.util.Optional;
 
-import com.sofka.api_transaccional.domain.exception.CuentaNoEncontradaException;
-import com.sofka.api_transaccional.domain.exception.MovimientoNoEncontradoException;
 import com.sofka.api_transaccional.domain.model.Movimiento;
 import com.sofka.api_transaccional.domain.port.out.MovimientoRepositoryPortOut;
 import com.sofka.api_transaccional.infraestructura.adapter.out.entity.MovimientoEntity;
@@ -29,7 +30,7 @@ public class MovimientoRepositoryAdapter implements MovimientoRepositoryPortOut 
     @Override
     public Movimiento crearMovimiento(Movimiento movimiento) {
         if (!cuentaJpaRepository.existsById(movimiento.getCuentaId())) {
-            throw new CuentaNoEncontradaException("Cuenta no encontrada");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cuenta no encontrada");
         }
         MovimientoEntity movimientoEntity = movimientoMapper.toEntityMovimiento(movimiento);
         return movimientoMapper.toDomainMovimiento(movimientoJpaRepository.save(movimientoEntity));
@@ -44,7 +45,7 @@ public class MovimientoRepositoryAdapter implements MovimientoRepositoryPortOut 
     @Override
     public Movimiento actualizarMovimiento(Movimiento movimiento) {
         Movimiento movimientoExistente = buscarMovimiento(movimiento.getMovimientoId())
-                .orElseThrow(() -> new MovimientoNoEncontradoException("Movimiento no encontrado"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Movimiento no encontrado"));
         movimiento.setCuentaId(movimientoExistente.getCuentaId());
         movimiento.setSaldo(movimientoExistente.getSaldo());
         MovimientoEntity movimientoEntity = movimientoMapper.toEntityMovimiento(movimiento);
@@ -54,7 +55,7 @@ public class MovimientoRepositoryAdapter implements MovimientoRepositoryPortOut 
     @Override
     public void eliminarMovimiento(Long movimientoId) {
         if (buscarMovimiento(movimientoId).isEmpty()) {
-            throw new MovimientoNoEncontradoException("Movimiento no encontrado");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Movimiento no encontrado");
         }
         movimientoJpaRepository.deleteById(movimientoId);
     }

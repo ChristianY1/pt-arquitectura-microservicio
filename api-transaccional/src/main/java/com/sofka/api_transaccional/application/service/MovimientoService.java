@@ -1,11 +1,12 @@
 package com.sofka.api_transaccional.application.service;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-import com.sofka.api_transaccional.domain.exception.CuentaNoEncontradaException;
-import com.sofka.api_transaccional.domain.exception.SaldoNoDisponibleException;
 import com.sofka.api_transaccional.domain.model.Cuenta;
 import com.sofka.api_transaccional.domain.model.Movimiento;
 import com.sofka.api_transaccional.domain.port.in.MovimientoPortIn;
@@ -26,12 +27,12 @@ public class MovimientoService implements MovimientoPortIn {
     @Override
     public Movimiento crearMovimiento(Movimiento movimiento) {
         Cuenta cuenta = cuentaRepositoryPortOut.buscarCuenta(movimiento.getCuentaId())
-                .orElseThrow(() -> new CuentaNoEncontradaException("Cuenta no encontrada"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cuenta no encontrada"));
 
         BigDecimal nuevoSaldo = cuenta.getSaldoInicial().add(movimiento.getValor());
 
         if (nuevoSaldo.compareTo(BigDecimal.ZERO) < 0) {
-            throw new SaldoNoDisponibleException("Saldo no disponible");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Saldo no disponible");
         }
 
         movimiento.setSaldo(nuevoSaldo);

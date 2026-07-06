@@ -1,10 +1,11 @@
 package com.sofka.api_transaccional.infraestructura.adapter.out.persistence;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.List;
 import java.util.Optional;
 
-import com.sofka.api_transaccional.domain.exception.ClienteNoEncontradoException;
-import com.sofka.api_transaccional.domain.exception.CuentaNoEncontradaException;
 import com.sofka.api_transaccional.domain.model.Cuenta;
 import com.sofka.api_transaccional.domain.port.out.CuentaRepositoryPortOut;
 import com.sofka.api_transaccional.infraestructura.adapter.out.entity.CuentaEntity;
@@ -29,7 +30,7 @@ public class CuentaRepositoryAdapter implements CuentaRepositoryPortOut {
     @Override
     public Cuenta crearCuenta(Cuenta cuenta) {
         if (!clienteJpaRepository.existsById(cuenta.getClienteId())) {
-            throw new ClienteNoEncontradoException("Cliente no encontrado");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente no encontrado");
         }
         CuentaEntity cuentaEntity = cuentaMapper.toEntityCuenta(cuenta);
         return cuentaMapper.toDomainCuenta(cuentaJpaRepository.save(cuentaEntity));
@@ -50,7 +51,7 @@ public class CuentaRepositoryAdapter implements CuentaRepositoryPortOut {
     @Override
     public Cuenta actualizarCuenta(Cuenta cuenta) {
         Cuenta cuentaExistente = buscarCuenta(cuenta.getCuentaId())
-                .orElseThrow(() -> new CuentaNoEncontradaException("Cuenta no encontrada"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cuenta no encontrada"));
         cuenta.setClienteId(cuentaExistente.getClienteId());
         CuentaEntity cuentaEntity = cuentaMapper.toEntityCuenta(cuenta);
         return cuentaMapper.toDomainCuenta(cuentaJpaRepository.save(cuentaEntity));
@@ -59,7 +60,7 @@ public class CuentaRepositoryAdapter implements CuentaRepositoryPortOut {
     @Override
     public void eliminarCuenta(Long cuentaId) {
         if (buscarCuenta(cuentaId).isEmpty()) {
-            throw new CuentaNoEncontradaException("Cuenta no encontrada");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cuenta no encontrada");
         }
         cuentaJpaRepository.deleteById(cuentaId);
     }

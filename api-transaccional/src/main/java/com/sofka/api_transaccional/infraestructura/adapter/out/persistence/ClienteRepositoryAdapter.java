@@ -1,8 +1,10 @@
 package com.sofka.api_transaccional.infraestructura.adapter.out.persistence;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.Optional;
 
-import com.sofka.api_transaccional.domain.exception.ClienteNoEncontradoException;
 import com.sofka.api_transaccional.domain.model.Cliente;
 import com.sofka.api_transaccional.domain.port.out.ClienteRepositoryPortOut;
 import com.sofka.api_transaccional.infraestructura.adapter.out.entity.ClienteEntity;
@@ -41,7 +43,7 @@ public class ClienteRepositoryAdapter implements ClienteRepositoryPortOut {
     @Override
     public Cliente actualizarCliente(Cliente cliente) {
         Cliente clienteExistente = buscarCliente(cliente.getClienteId())
-                .orElseThrow(() -> new ClienteNoEncontradoException("Cliente no encontrado"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente no encontrado"));
         cliente.setPersonaId(clienteExistente.getPersonaId());
         ClienteEntity clienteEntity = clienteMapper.toEntityCliente(cliente);
         return clienteMapper.toDomainCliente(clienteJpaRepository.save(clienteEntity));
@@ -50,7 +52,7 @@ public class ClienteRepositoryAdapter implements ClienteRepositoryPortOut {
     @Override
     public void eliminarCliente(Long clienteId) {
         if (buscarCliente(clienteId).isEmpty()) {
-            throw new ClienteNoEncontradoException("Cliente no encontrado");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente no encontrado");
         }
         
         clienteJpaRepository.deleteById(clienteId);
