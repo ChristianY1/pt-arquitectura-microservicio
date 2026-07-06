@@ -19,6 +19,15 @@ public class ClienteService implements ClientePortIn {
         this.clienteRepositoryPortOut = clienteRepositoryPortOut;
     }
 
+    /**
+     * Crea un nuevo cliente, validando previamente que la cédula tenga el formato correcto
+     * y que no exista ya un cliente registrado con la misma cédula o el mismo usuario.
+     *
+     * @param cliente datos del cliente a crear
+     * @return el cliente creado, con los identificadores generados
+     * @throws ResponseStatusException 400 si la cédula no es válida, si ya existe un cliente
+     *                                  con esa cédula o si el usuario ya está en uso
+     */
     @Override
     public Cliente crearCliente(Cliente cliente) {
         validarIdentificacion(cliente.getIdentificacion());
@@ -31,27 +40,57 @@ public class ClienteService implements ClientePortIn {
         return clienteRepositoryPortOut.crearCliente(cliente);
     }
 
+    /**
+     * Busca un cliente por su identificador interno.
+     *
+     * @param clienteId id del cliente
+     * @return el cliente encontrado, o null si no existe
+     */
     @Override
     public Optional<Cliente> buscarCliente(Long clienteId) {
         return clienteRepositoryPortOut.buscarCliente(clienteId);
     }
 
+    /**
+     * Busca un cliente por el número de cédula de la persona asociada.
+     *
+     * @param identificacion cédula de la persona
+     * @return el cliente encontrado, o null si no existe
+     */
     @Override
     public Optional<Cliente> buscarClientePorIdentificacion(String identificacion) {
         return clienteRepositoryPortOut.buscarClientePorIdentificacion(identificacion);
     }
 
+    /**
+     * Actualiza los datos de un cliente existente, validando previamente el formato de la cédula.
+     *
+     * @param cliente datos actualizados del cliente
+     * @return el cliente actualizado
+     * @throws ResponseStatusException 400 si la cédula no es válida
+     */
     @Override
     public Cliente actualizarCliente(Cliente cliente) {
         validarIdentificacion(cliente.getIdentificacion());
         return clienteRepositoryPortOut.actualizarCliente(cliente);
     }
 
+    /**
+     * Elimina un cliente por su identificador.
+     *
+     * @param clienteId id del cliente a eliminar
+     */
     @Override
     public void eliminarCliente(Long clienteId) {
         clienteRepositoryPortOut.eliminarCliente(clienteId);
     }
 
+    /**
+     * Valida que la cédula no sea nula y tenga exactamente 10 caracteres.
+     *
+     * @param identificacion cédula a validar
+     * @throws ResponseStatusException 400 si la cédula es nula o no tiene la longitud esperada
+     */
     private void validarIdentificacion(String identificacion) {
         if (identificacion == null || identificacion.length() != LONGITUD_IDENTIFICACION) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cédula no válida");
