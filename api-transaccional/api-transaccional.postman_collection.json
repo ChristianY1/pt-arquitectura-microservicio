@@ -1,0 +1,411 @@
+{
+  "info": {
+    "_postman_id": "a872d6b2-ed85-448b-be68-cd197d63814c",
+    "name": "api-transaccional",
+    "description": "Coleccion para probar el CRUD de Cliente, Cuenta y Movimiento",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "15321969"
+  },
+  "item": [
+    {
+      "name": "Cliente",
+      "item": [
+        {
+          "name": "Crear Cliente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuario\": \"josorio\",\n  \"contrasenia\": \"1245\",\n  \"estado\": true,\n  \"persona\": {\n    \"nombre\": \"Juan Osorio\",\n    \"genero\": \"M\",\n    \"edad\": 40,\n    \"identificacion\": \"1234567893\",\n    \"direccion\": \"13 junio y Equinoccial\",\n    \"telefono\": \"098874587\"\n  }\n}"
+            },
+            "url": {
+              "raw": "http://localhost:9999/api-transaccional/clientes/crearCliente",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9999",
+              "path": [
+                "api-transaccional",
+                "clientes",
+                "crearCliente"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Cliente",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:9999/api-transaccional/clientes/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9999",
+              "path": [
+                "api-transaccional",
+                "clientes",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Cliente",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuario\": \"jperez\",\n  \"contrasenia\": \"claveNueva123\",\n  \"estado\": \"activo\",\n  \"persona\": {\n    \"nombre\": \"Juan Perez\",\n    \"genero\": \"M\",\n    \"edad\": 31,\n    \"identificacion\": \"1234567890\",\n    \"direccion\": \"Calle Falsa 456\",\n    \"telefono\": \"0999999999\"\n  }\n}"
+            },
+            "url": {
+              "raw": "http://localhost:9999/api-transaccional/clientes/actualizar/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9999",
+              "path": [
+                "api-transaccional",
+                "clientes",
+                "actualizar",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar Cliente",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:9999/api-transaccional/clientes/eliminar/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9999",
+              "path": [
+                "api-transaccional",
+                "clientes",
+                "eliminar",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Cuenta",
+      "item": [
+        {
+          "name": "Crear Cuenta",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"numeroCuenta\": \"496825\",\n  \"tipoCuenta\": 1,\n  \"saldoInicial\": 540,\n  \"estado\": true,\n  \"identificacion\": \"1234567892\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:9999/api-transaccional/cuentas",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9999",
+              "path": [
+                "api-transaccional",
+                "cuentas"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Cuenta",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:9999/api-transaccional/cuentas/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9999",
+              "path": [
+                "api-transaccional",
+                "cuentas",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Cuenta",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"numeroCuenta\": \"585545\",\n  \"tipoCuenta\": 2,\n  \"saldoInicial\": 2500,\n  \"estado\": \"activo\",\n  \"identificacion\": \"1234567890\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:9999/api-transaccional/cuentas/2",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9999",
+              "path": [
+                "api-transaccional",
+                "cuentas",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar Cuenta",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:9999/api-transaccional/cuentas/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9999",
+              "path": [
+                "api-transaccional",
+                "cuentas",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Cuentas por Cliente",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:9999/api-transaccional/cuentas/cliente/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9999",
+              "path": [
+                "api-transaccional",
+                "cuentas",
+                "cliente",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Movimiento",
+      "item": [
+        {
+          "name": "Crear Movimiento",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"valor\": -540,\n  \"numeroCuenta\": \"496825\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:9999/api-transaccional/movimientos",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9999",
+              "path": [
+                "api-transaccional",
+                "movimientos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Movimiento",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:9999/api-transaccional/movimientos/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9999",
+              "path": [
+                "api-transaccional",
+                "movimientos",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Movimiento",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"valor\": -200,\n  \"numeroCuenta\": \"478758\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:9999/api-transaccional/movimientos/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9999",
+              "path": [
+                "api-transaccional",
+                "movimientos",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar Movimiento",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:9999/api-transaccional/movimientos/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9999",
+              "path": [
+                "api-transaccional",
+                "movimientos",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Movimientos por Cuenta",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:9999/api-transaccional/movimientos/cuenta/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9999",
+              "path": [
+                "api-transaccional",
+                "movimientos",
+                "cuenta",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reporte de Movimientos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:9999/api-transaccional/movimientos/reportes?identificacion=1234567892&desde=2026-07-01&hasta=2026-07-10",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9999",
+              "path": [
+                "api-transaccional",
+                "movimientos",
+                "reportes"
+              ],
+              "query": [
+                {
+                  "key": "identificacion",
+                  "value": "1234567892"
+                },
+                {
+                  "key": "desde",
+                  "value": "2026-07-01"
+                },
+                {
+                  "key": "hasta",
+                  "value": "2026-07-10"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
