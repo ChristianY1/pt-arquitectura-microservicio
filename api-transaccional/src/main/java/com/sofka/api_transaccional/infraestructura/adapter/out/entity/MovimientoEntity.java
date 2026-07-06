@@ -12,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,7 +36,8 @@ import com.sofka.api_transaccional.domain.model.TipoMovimiento;
 public class MovimientoEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "movimientos_seq")
+    @SequenceGenerator(name = "movimientos_seq", sequenceName = "movimientos_seq", allocationSize = 1)
     private Long movimientoId;
     private LocalDateTime fechaMovimiento;
 

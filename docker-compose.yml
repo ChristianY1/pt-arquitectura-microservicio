@@ -1,0 +1,37 @@
+services:
+  db:
+    build:
+      context: ./scripts-db
+      dockerfile: Dockerfile
+    container_name: db-fintech
+    environment:
+      POSTGRES_DB: db-fintech
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5454:5432"
+    volumes:
+      - db-fintech-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d db-fintech"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api-transaccional:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: api-transaccional
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/db-fintech
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+    ports:
+      - "9999:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  db-fintech-data:

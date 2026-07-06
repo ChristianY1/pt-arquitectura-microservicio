@@ -8,6 +8,7 @@ import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,7 +30,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 public class PersonaEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "personas_seq")
+    @SequenceGenerator(name = "personas_seq", sequenceName = "personas_seq", allocationSize = 1)
     private Long personaId;
     private String nombre;
     private String genero;
