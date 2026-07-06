@@ -3,6 +3,7 @@ package com.sofka.api_transaccional.application.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.sofka.api_transaccional.domain.exception.NumeroCuentaNoValidoException;
 import com.sofka.api_transaccional.domain.model.Cuenta;
 import com.sofka.api_transaccional.domain.port.in.CuentaPortIn;
 import com.sofka.api_transaccional.domain.port.out.CuentaRepositoryPortOut;
@@ -17,6 +18,7 @@ public class CuentaService implements CuentaPortIn {
 
     @Override
     public Cuenta crearCuenta(Cuenta cuenta) {
+        validarNumeroCuenta(cuenta.getNumeroCuenta());
         return cuentaRepositoryPortOut.crearCuenta(cuenta);
     }
 
@@ -32,6 +34,7 @@ public class CuentaService implements CuentaPortIn {
 
     @Override
     public Cuenta actualizarCuenta(Cuenta cuenta) {
+        validarNumeroCuenta(cuenta.getNumeroCuenta());
         return cuentaRepositoryPortOut.actualizarCuenta(cuenta);
     }
 
@@ -43,6 +46,12 @@ public class CuentaService implements CuentaPortIn {
     @Override
     public List<Cuenta> listarCuentasPorCliente(Long clienteId) {
         return cuentaRepositoryPortOut.listarCuentasPorCliente(clienteId);
+    }
+
+    private void validarNumeroCuenta(String numeroCuenta) {
+        if (numeroCuenta == null || numeroCuenta.isBlank()) {
+            throw new NumeroCuentaNoValidoException("El número de cuenta es obligatorio");
+        }
     }
 
 }

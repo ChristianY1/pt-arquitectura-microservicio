@@ -3,6 +3,7 @@ package com.sofka.api_transaccional.infraestructura.adapter.out.entity;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.EnumType;
@@ -37,6 +38,8 @@ public class CuentaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long cuentaId;
+
+    @Column(nullable = false)
     private String numeroCuenta;
 
     @Enumerated(EnumType.STRING)
