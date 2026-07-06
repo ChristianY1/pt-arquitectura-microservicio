@@ -12,6 +12,8 @@ public interface ClienteRepositoryPortOut {
 
     Optional<Cliente> buscarClientePorIdentificacion(String identificacion);
 
+    boolean existeUsuario(String usuario);
+
     Cliente actualizarCliente(Cliente cliente);
 
     void eliminarCliente(Long clienteId);

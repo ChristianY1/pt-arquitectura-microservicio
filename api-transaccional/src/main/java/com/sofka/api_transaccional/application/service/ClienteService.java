@@ -22,6 +22,12 @@ public class ClienteService implements ClientePortIn {
     @Override
     public Cliente crearCliente(Cliente cliente) {
         validarIdentificacion(cliente.getIdentificacion());
+        if (clienteRepositoryPortOut.buscarClientePorIdentificacion(cliente.getIdentificacion()).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ya existe un cliente con esta cédula");
+        }
+        if (clienteRepositoryPortOut.existeUsuario(cliente.getUsuario())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El usuario ya está en uso");
+        }
         return clienteRepositoryPortOut.crearCliente(cliente);
     }
 

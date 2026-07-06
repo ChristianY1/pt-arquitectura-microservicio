@@ -21,6 +21,9 @@ public class CuentaService implements CuentaPortIn {
     @Override
     public Cuenta crearCuenta(Cuenta cuenta) {
         validarNumeroCuenta(cuenta.getNumeroCuenta());
+        if (cuentaRepositoryPortOut.buscarCuentaPorNumero(cuenta.getNumeroCuenta()).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ya existe una cuenta con este número");
+        }
         return cuentaRepositoryPortOut.crearCuenta(cuenta);
     }
 

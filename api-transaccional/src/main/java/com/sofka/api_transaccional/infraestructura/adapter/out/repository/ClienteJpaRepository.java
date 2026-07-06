@@ -10,4 +10,6 @@ public interface ClienteJpaRepository extends JpaRepository<ClienteEntity, Long>
 
     Optional<ClienteEntity> findByPersonaEntity_Identificacion(String identificacion);
 
+    boolean existsByUsuario(String usuario);
+
 }

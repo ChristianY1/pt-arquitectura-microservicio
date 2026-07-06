@@ -39,7 +39,7 @@ public class CuentaEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long cuentaId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String numeroCuenta;
 
     @Enumerated(EnumType.STRING)

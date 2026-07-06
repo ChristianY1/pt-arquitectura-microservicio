@@ -41,6 +41,11 @@ public class ClienteRepositoryAdapter implements ClienteRepositoryPortOut {
     }
 
     @Override
+    public boolean existeUsuario(String usuario) {
+        return clienteJpaRepository.existsByUsuario(usuario);
+    }
+
+    @Override
     public Cliente actualizarCliente(Cliente cliente) {
         Cliente clienteExistente = buscarCliente(cliente.getClienteId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente no encontrado"));
