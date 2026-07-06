@@ -5,15 +5,15 @@ services:
       dockerfile: Dockerfile
     container_name: db-fintech
     environment:
-      POSTGRES_DB: db-fintech
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - "5454:5432"
+      - "${DB_PORT}:5432"
     volumes:
       - db-fintech-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d db-fintech"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -25,10 +25,10 @@ services:
     container_name: api-transaccional
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/db-fintech
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - "9999:8080"
+      - "${APP_PORT}:8080"
     depends_on:
       db:
         condition: service_healthy

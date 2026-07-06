@@ -6,7 +6,7 @@ CREATE TABLE public.personas (
 	fecha_actualizacion timestamp(6) NULL,
 	fecha_creacion timestamp(6) NULL,
 	genero varchar(255) NULL,
-	identificacion varchar(10) NULL,
+	identificacion varchar(10) NOT NULL,
 	nombre varchar(255) NULL,
 	telefono varchar(255) NULL,
 	CONSTRAINT personas_pkey PRIMARY KEY (persona_id),
@@ -89,9 +89,9 @@ INSERT INTO public.cuentas (cuenta_id,estado,fecha_actualizacion,fecha_creacion,
 -- Creacion de movimientos
 INSERT INTO public.movimientos (movimiento_id,fecha_actualizacion,fecha_creacion,fecha_movimiento,saldo_disponible,tipo_movimiento,valor,fk_cuenta_id) VALUES
 	 (1,'2026-07-06 05:48:42.922123','2026-07-06 05:48:42.922123','2026-07-06 05:48:42.918863',1425.00,'RETIRO',-575.00,1),
-	 (2,'2026-07-06 05:48:59.134807','2026-07-06 05:48:59.134807','2026-07-06 05:48:59.131692',700.00,'DEPOSITO',600.00,52),
-	 (3,'2026-07-06 05:49:13.965517','2026-07-06 05:49:13.965517','2026-07-06 05:49:13.961858',150.00,'DEPOSITO',150.00,53),
-	 (4,'2026-07-06 05:49:28.737092','2026-07-06 05:49:28.737092','2026-07-06 05:49:28.734026',0.00,'RETIRO',-540.00,54);
+	 (2,'2026-07-06 05:48:59.134807','2026-07-06 05:48:59.134807','2026-07-06 05:48:59.131692',700.00,'DEPOSITO',600.00,5),
+	 (3,'2026-07-06 05:49:13.965517','2026-07-06 05:49:13.965517','2026-07-06 05:49:13.961858',150.00,'DEPOSITO',150.00,3),
+	 (4,'2026-07-06 05:49:28.737092','2026-07-06 05:49:28.737092','2026-07-06 05:49:28.734026',0.00,'RETIRO',-540.00,4);
 
 -- Secuencias: Hibernate (GenerationType.AUTO sobre PostgreSQL) genera por defecto
 -- una secuencia por tabla llamada "<tabla>_seq" 
