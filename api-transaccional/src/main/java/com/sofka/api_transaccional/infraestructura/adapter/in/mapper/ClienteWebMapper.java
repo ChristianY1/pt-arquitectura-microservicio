@@ -22,6 +22,14 @@ public class ClienteWebMapper {
     }
 
     public ClienteResponseDTO toResponseCliente(Cliente cliente) {
-        return new ClienteResponseDTO(cliente.getClienteId(), cliente.getUsuario());
+        return new ClienteResponseDTO(
+                cliente.getUsuario(),
+                cliente.getEstado(),
+                cliente.getNombre(),
+                cliente.getGenero(),
+                cliente.getEdad(),
+                cliente.getIdentificacion(),
+                cliente.getDireccion(),
+                cliente.getTelefono());
     }
 }

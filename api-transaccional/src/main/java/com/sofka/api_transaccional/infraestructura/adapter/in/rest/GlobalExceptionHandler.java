@@ -13,21 +13,17 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<Map<String, Object>> handleResponseStatusException(ResponseStatusException ex) {
-        return build(ex.getStatusCode().value(), ex.getReason());
+        return ResponseBuilder.build(HttpStatus.valueOf(ex.getStatusCode().value()), ex.getReason(), null);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, Object>> handleIllegalArgument(IllegalArgumentException ex) {
-        return build(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
+        return ResponseBuilder.build(HttpStatus.BAD_REQUEST, ex.getMessage(), null);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGenerico(Exception ex) {
-        return build(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Ocurrió un error inesperado");
-    }
-
-    private ResponseEntity<Map<String, Object>> build(int status, String mensaje) {
-        return ResponseEntity.status(status).body(Map.of("mensaje", mensaje));
+        return ResponseBuilder.build(HttpStatus.INTERNAL_SERVER_ERROR, "Ocurrió un error inesperado", null);
     }
 
 }
