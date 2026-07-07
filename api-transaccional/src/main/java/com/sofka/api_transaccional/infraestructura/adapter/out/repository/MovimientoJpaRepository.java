@@ -26,18 +26,17 @@ public interface MovimientoJpaRepository extends JpaRepository<MovimientoEntity,
 
     @Query(value = """
             SELECT m.fecha_movimiento AS fechaMovimiento,
-                   p.nombre AS nombre,
+                   cr.nombre AS nombre,
                    c2.numero_cuenta AS numeroCuenta,
                    c2.tipo_cuenta AS tipoCuenta,
                    c2.saldo_inicial AS saldoInicial,
                    c2.estado AS estado,
                    m.valor AS valor,
                    m.saldo_disponible AS saldoDisponible
-            FROM personas p
-            JOIN clientes c ON c.fk_persona_id = p.persona_id
-            JOIN cuentas c2 ON c2.fk_cliente_id = c.cliente_id
+            FROM clientes_referencia cr
+            JOIN cuentas c2 ON c2.fk_cliente_id = cr.cliente_id
             JOIN movimientos m ON m.fk_cuenta_id = c2.cuenta_id
-            WHERE p.identificacion = :identificacion
+            WHERE cr.identificacion = :identificacion
             AND m.fecha_movimiento BETWEEN :desde AND :hasta
             """, nativeQuery = true)
     List<ReporteMovimientoDTO> buscarReporteMovimientos(@Param("identificacion") String identificacion, 

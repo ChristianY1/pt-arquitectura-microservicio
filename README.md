@@ -1,93 +1,72 @@
-# PT-API-TRANSACCIONAL
+# PT Arquitectura Microservicio
 
-Microservicio transaccional para el sector bancario para la generacion de movimientos, construido con **arquitectura hexagonal (puertos y adaptadores)** sobre Spring Boot.
+Microservicios api-personas (Gestion de Clientes) y api-transaccional(Transaccionabilidad) con arquitectura hexagonal comunicados asincronamente usando Kafka
+
+- **`api-personas`**: `Persona`  `Cliente`.
+- **`api-transaccional`**: `Cuenta` `Movimiento`.
+
 
 ## Dominio
 
-- **Persona**: datos personales (nombre, género, edad, identificación, dirección, teléfono).
-- **Cliente**: extiende a Persona con datos de acceso (usuario, contraseña, estado activo/inactivo).
-- **Cuenta**: pertenece a un cliente; tiene número de cuenta único, tipo (`AHORROS`/`CORRIENTE`), saldo inicial y estado.
-- **Movimiento**: pertenece a una cuenta; registra depósitos/retiros con su fecha, valor y el saldo disponible resultante (estilo *ledger*: cada movimiento guarda su propio snapshot de saldo, en vez de mutar el saldo de la cuenta).
+**API-Personas**
+- Persona
+- Cliente 
+
+**API-Transacciones**
+- Cuenta
+- Movimiento
+
+## Cómo se comunican los dos servicios
+
+1. Cuando se crea o actualiza un `Cliente` en `api-personas`, se publica un evento (`clienteId`, `identificacion`, `nombre`, `estado`) al tópico Kafka **`clientes-eventos`**.
+2. `api-transaccional` consume ese tópico y guarda una copia local en su propia tabla `clientes_referencia` (solo lo que necesita: id, cédula, nombre y estado — nunca usuario/contraseña).
+3. Cuando se crea una `Cuenta`, `CuentaService` valida que el cliente exista y esté activo consultando **esa copia local**, no llamando en vivo a `api-personas`.
+
+
+`api-transaccional` tiene su **propia clase `Cliente`** (dominio local, solo `clienteId`/`identificacion`/`nombre`/`estado`) — no importa ni depende de la clase `Cliente` de `api-personas` (son módulos Maven separados, sin librería compartida). Son dos clases con el mismo nombre y propósitos distintos, a propósito.
+
+## Bases de datos
+
+Cada servicio tiene **su propia base de datos Postgres**, sin relaciones (FK) entre ellas:
+
+- **`db-personas`**: tablas `personas`, `clientes`.
+- **`db-transaccional`**: tablas `clientes_referencia` (la copia local descrita arriba), `cuentas`, `movimientos`.
+
 
 ## Stack técnico
 
-- Java 17, Spring Boot 4.1.0
-- Spring Data JPA + PostgreSQL
+- Java 17, Spring Boot 4.1.0 (Jackson 3 por defecto — ver nota abajo)
+- Spring Data JPA + PostgreSQL (una instancia por servicio)
+- Spring Kafka (`spring-kafka`) — productor en `api-personas`, consumidor en `api-transaccional`
 - Lombok
 - Maven (con wrapper `mvnw`)
-- Docker/Podman Compose para levantar el entorno completo
-
-## Arquitectura
-
-Estructura de paquetes bajo `com.sofka.api_transaccional`:
-
-```
-domain/
-  model/        -> entidades de dominio puras (sin anotaciones de Spring/JPA)
-  port/in/      -> puertos de entrada (casos de uso, uno por agregado)
-  port/out/     -> puertos de salida (contratos de persistencia)
-application/
-  service/      -> implementación de los puertos de entrada; reglas de negocio
-infraestructura/
-  adapter/in/rest/      -> controllers REST
-  adapter/in/dto/       -> DTOs de request/response (records)
-  adapter/in/mapper/    -> DTO <-> dominio
-  adapter/out/entity/   -> entidades JPA
-  adapter/out/repository/ -> interfaces Spring Data JPA (incluye native queries/projections)
-  adapter/out/mapper/   -> entidad JPA <-> dominio
-  adapter/out/persistence/ -> adapters que implementan los puertos de salida
-  config/               -> configuración de Spring (inyección manual de beans, JPA auditing)
-```
+- Docker Compose para levantar el entorno completo
 
 
 ## Reglas de negocio principales
 
+**`api-personas`**
 - La identificación (cédula) debe tener exactamente 10 caracteres y ser única por persona.
 - El usuario del cliente debe ser único.
+
+**`api-transaccional`**
 - El número de cuenta debe ser único y obligatorio.
-- Solo se puede crear una cuenta para un cliente con `estado = true`.
+- Solo se puede crear una cuenta para un cliente que exista y tenga `estado = true` (validado contra `clientes_referencia`, la copia local).
 - Solo se puede registrar un movimiento sobre una cuenta con `estado = true`.
 - Un movimiento no puede dejar el saldo disponible en negativo.
 - El reporte de movimientos no admite un rango de fechas mayor a 30 días.
 
-## Endpoints
 
-| Método | Ruta | Descripción |
-|---|---|---|
-| POST | `/clientes/crearCliente` | Crea un cliente (y su persona asociada) |
-| GET | `/clientes/{clienteId}` | Busca un cliente por id |
-| PUT | `/clientes/actualizar/{clienteId}` | Actualiza un cliente |
-| DELETE | `/clientes/eliminar/{clienteId}` | Elimina un cliente |
-| POST | `/cuentas` | Crea una cuenta |
-| GET | `/cuentas/{cuentaId}` | Busca una cuenta por id |
-| PUT | `/cuentas/{cuentaId}` | Actualiza una cuenta |
-| DELETE | `/cuentas/{cuentaId}` | Elimina una cuenta |
-| GET | `/cuentas/cliente/{clienteId}` | Lista las cuentas de un cliente |
-| POST | `/movimientos` | Crea un movimiento (depósito o retiro, según el signo del valor) |
-| GET | `/movimientos/{movimientoId}` | Busca un movimiento por id |
-| PUT | `/movimientos/{movimientoId}` | Actualiza un movimiento |
-| DELETE | `/movimientos/{movimientoId}` | Elimina un movimiento |
-| GET | `/movimientos/cuenta/{cuentaId}` | Lista los movimientos de una cuenta |
-| GET | `/movimientos/reportes?identificacion=&desde=&hasta=` | Reporte de movimientos de un cliente por rango de fechas (máx. 30 días, `desde`/`hasta` en formato `yyyy-MM-dd`) |
 
-## Cómo levantar el proyecto
-
-### Con Docker/Podman Compose
+## Ejecución del proyecto
 
 ```bash
 docker compose up --build
 ```
 
-Esto levanta dos contenedores:
-- **`db`**: PostgreSQL 16, construido con una imagen propia (`scripts-db/Dockerfile`) que ya trae precargados el esquema y datos de ejemplo (`scripts-db/BaseDatos.sql`) — no requiere ningún paso manual adicional.
-- **`api-transaccional`**: la API, compilada y ejecutada sobre GraalVM (`ghcr.io/graalvm/jdk-community:17`), expuesta en `http://localhost:9999`.
+## Colecciones de Postman
 
-Si ya existe un volumen de datos previo de otra corrida, hay que resetearlo para que el seed se vuelva a aplicar: `docker compose down -v`.
+Hay una colección por servicio:
+- `api-personas.postman_collection.json`: CRUD de Cliente (`http://localhost:9998/api-personas/...`).
+- `api-transaccional.postman_collection.json`: CRUD de Cuenta y Movimiento (`http://localhost:9999/api-transaccional/...`).
 
-
-## Colección de Postman
-
-`api-transaccional-collection.json` contiene peticiones por cada endpoint (crear/buscar/actualizar/eliminar de Cliente, Cuenta y Movimiento, más el reporte de movimientos), organizadas en carpetas por agregado. Los `Content-Type` y bodies ya reflejan la forma actual de los DTOs (booleans para `estado`, códigos numéricos para `tipoCuenta`, etc.), y usan los datos de ejemplo que trae precargados el contenedor de la base (cédula `1234567891`, cuenta `478758`, etc.).
-
-la raíz es:
-`http://localhost:9999/api-transaccional/`

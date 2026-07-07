@@ -15,9 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.sofka.api_transaccional.domain.model.Cliente;
 import com.sofka.api_transaccional.domain.model.Cuenta;
-import com.sofka.api_transaccional.domain.port.in.ClientePortIn;
 import com.sofka.api_transaccional.domain.port.in.CuentaPortIn;
 import com.sofka.api_transaccional.infraestructura.adapter.in.dto.request.CuentaRequestDTO;
 import com.sofka.api_transaccional.infraestructura.adapter.in.dto.response.CuentaResponseDTO;
@@ -29,23 +27,17 @@ public class CuentaController {
 
     private final CuentaPortIn cuentaPortIn;
 
-    private final ClientePortIn clientePortIn;
-
     private final CuentaWebMapper cuentaWebMapper;
 
-    public CuentaController(CuentaPortIn cuentaPortIn, ClientePortIn clientePortIn, CuentaWebMapper cuentaWebMapper) {
+    public CuentaController(CuentaPortIn cuentaPortIn, CuentaWebMapper cuentaWebMapper) {
         this.cuentaPortIn = cuentaPortIn;
-        this.clientePortIn = clientePortIn;
         this.cuentaWebMapper = cuentaWebMapper;
     }
 
     @PostMapping
     ResponseEntity<Map<String, Object>> crearCuenta(@RequestBody CuentaRequestDTO cuentaRequestDTO) {
-        Cliente cliente = clientePortIn.buscarClientePorIdentificacion(cuentaRequestDTO.identificacion())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente no encontrado"));
         Cuenta cuenta = cuentaWebMapper.toDomainCuenta(cuentaRequestDTO);
-        cuenta.setClienteId(cliente.getClienteId());
-        Cuenta cuentaCreada = cuentaPortIn.crearCuenta(cuenta);
+        Cuenta cuentaCreada = cuentaPortIn.crearCuenta(cuenta, cuentaRequestDTO.identificacion());
         CuentaResponseDTO cuentaResponse = cuentaWebMapper.toResponseCuenta(cuentaCreada);
         return ResponseBuilder.build(HttpStatus.OK, "Cuenta creada exitosamente", cuentaResponse);
     }

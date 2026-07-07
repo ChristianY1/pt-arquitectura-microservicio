@@ -8,8 +8,6 @@ import com.sofka.api_transaccional.infraestructura.adapter.out.entity.ClienteEnt
 
 public interface ClienteJpaRepository extends JpaRepository<ClienteEntity, Long> {
 
-    Optional<ClienteEntity> findByPersonaEntity_Identificacion(String identificacion);
-
-    boolean existsByUsuario(String usuario);
+    Optional<ClienteEntity> findByIdentificacion(String identificacion);
 
 }

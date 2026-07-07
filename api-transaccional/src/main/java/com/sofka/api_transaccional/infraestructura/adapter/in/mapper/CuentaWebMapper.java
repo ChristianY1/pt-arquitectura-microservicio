@@ -19,7 +19,7 @@ public class CuentaWebMapper {
     public CuentaResponseDTO toResponseCuenta(Cuenta cuenta) {
         return new CuentaResponseDTO(
                 cuenta.getNumeroCuenta(),
-                cuenta.getTipoCuenta().getCodigo(),
+                cuenta.getTipoCuenta().name(),
                 cuenta.getSaldoInicial(),
                 cuenta.isEstado());
     }
