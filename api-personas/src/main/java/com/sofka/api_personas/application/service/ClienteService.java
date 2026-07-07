@@ -1,13 +1,14 @@
-package com.sofka.api_transaccional.application.service;
+package com.sofka.api_personas.application.service;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
-import com.sofka.api_transaccional.domain.model.Cliente;
-import com.sofka.api_transaccional.domain.port.in.ClientePortIn;
-import com.sofka.api_transaccional.domain.port.out.ClienteRepositoryPortOut;
+import com.sofka.api_personas.domain.model.Cliente;
+import com.sofka.api_personas.domain.port.in.ClientePortIn;
+import com.sofka.api_personas.domain.port.out.ClienteEventoPublisherPortOut;
+import com.sofka.api_personas.domain.port.out.ClienteRepositoryPortOut;
 
 public class ClienteService implements ClientePortIn {
 
@@ -15,8 +16,11 @@ public class ClienteService implements ClientePortIn {
 
     ClienteRepositoryPortOut clienteRepositoryPortOut;
 
-    public ClienteService(ClienteRepositoryPortOut clienteRepositoryPortOut) {
+    ClienteEventoPublisherPortOut clienteEventoPublisherPortOut;
+
+    public ClienteService(ClienteRepositoryPortOut clienteRepositoryPortOut, ClienteEventoPublisherPortOut clienteEventoPublisherPortOut) {
         this.clienteRepositoryPortOut = clienteRepositoryPortOut;
+        this.clienteEventoPublisherPortOut = clienteEventoPublisherPortOut;
     }
 
     /**
@@ -37,7 +41,9 @@ public class ClienteService implements ClientePortIn {
         if (clienteRepositoryPortOut.existeUsuario(cliente.getUsuario())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El usuario ya está en uso");
         }
-        return clienteRepositoryPortOut.crearCliente(cliente);
+        Cliente clienteCreado = clienteRepositoryPortOut.crearCliente(cliente);
+        clienteEventoPublisherPortOut.publicarCliente(clienteCreado);
+        return clienteCreado;
     }
 
     /**
@@ -72,7 +78,9 @@ public class ClienteService implements ClientePortIn {
     @Override
     public Cliente actualizarCliente(Cliente cliente) {
         validarIdentificacion(cliente.getIdentificacion());
-        return clienteRepositoryPortOut.actualizarCliente(cliente);
+        Cliente clienteActualizado = clienteRepositoryPortOut.actualizarCliente(cliente);
+        clienteEventoPublisherPortOut.publicarCliente(clienteActualizado);
+        return clienteActualizado;
     }
 
     /**

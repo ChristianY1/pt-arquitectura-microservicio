@@ -1,4 +1,4 @@
-package com.sofka.api_transaccional.application.service;
+package com.sofka.api_personas.application.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -11,8 +11,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.sofka.api_transaccional.domain.model.Cliente;
-import com.sofka.api_transaccional.domain.port.out.ClienteRepositoryPortOut;
+import com.sofka.api_personas.domain.model.Cliente;
+import com.sofka.api_personas.domain.port.out.ClienteEventoPublisherPortOut;
+import com.sofka.api_personas.domain.port.out.ClienteRepositoryPortOut;
 
 /**
  * Pruebas unitarias de {@link ClienteService}, enfocadas en las excepciones de dominio
@@ -22,7 +23,9 @@ class ClienteServiceTest {
 
     private final ClienteRepositoryPortOut clienteRepositoryPortOut = mock(ClienteRepositoryPortOut.class);
 
-    private final ClienteService clienteService = new ClienteService(clienteRepositoryPortOut);
+    private final ClienteEventoPublisherPortOut clienteEventoPublisherPortOut = mock(ClienteEventoPublisherPortOut.class);
+
+    private final ClienteService clienteService = new ClienteService(clienteRepositoryPortOut, clienteEventoPublisherPortOut);
 
     /**
      * Si ya existe un cliente registrado con la misma cédula, debe

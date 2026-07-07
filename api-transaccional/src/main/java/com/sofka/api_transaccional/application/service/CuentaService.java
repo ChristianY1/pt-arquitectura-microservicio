@@ -25,7 +25,7 @@ public class CuentaService implements CuentaPortIn {
 
     /**
      * Crea una nueva cuenta, validando que el número de cuenta sea válido y único,
-     * y que el cliente asociado exista y esté activo.
+     * y que el cliente asociado exista y esté activo en la copia local alimentada por Kafka.
      *
      * @param cuenta datos de la cuenta a crear
      * @return la cuenta creada, con el identificador generado

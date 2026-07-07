@@ -1,4 +1,4 @@
-package com.sofka.api_transaccional.infraestructura.adapter.in.dto.response;
+package com.sofka.api_personas.infraestructura.adapter.in.dto.response;
 
 public record ClienteResponseDTO(
         String usuario,

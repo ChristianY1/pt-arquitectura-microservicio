@@ -1,4 +1,4 @@
-package com.sofka.api_transaccional.domain.model;
+package com.sofka.api_personas.domain.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

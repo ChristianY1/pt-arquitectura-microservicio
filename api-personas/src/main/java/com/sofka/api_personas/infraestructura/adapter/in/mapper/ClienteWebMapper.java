@@ -1,8 +1,8 @@
-package com.sofka.api_transaccional.infraestructura.adapter.in.mapper;
+package com.sofka.api_personas.infraestructura.adapter.in.mapper;
 
-import com.sofka.api_transaccional.domain.model.Cliente;
-import com.sofka.api_transaccional.infraestructura.adapter.in.dto.request.ClienteRequestDTO;
-import com.sofka.api_transaccional.infraestructura.adapter.in.dto.response.ClienteResponseDTO;
+import com.sofka.api_personas.domain.model.Cliente;
+import com.sofka.api_personas.infraestructura.adapter.in.dto.request.ClienteRequestDTO;
+import com.sofka.api_personas.infraestructura.adapter.in.dto.response.ClienteResponseDTO;
 
 public class ClienteWebMapper {
 

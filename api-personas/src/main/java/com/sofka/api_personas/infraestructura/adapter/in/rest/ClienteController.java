@@ -1,4 +1,4 @@
-package com.sofka.api_transaccional.infraestructura.adapter.in.rest;
+package com.sofka.api_personas.infraestructura.adapter.in.rest;
 
 import java.util.Map;
 
@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.sofka.api_transaccional.domain.model.Cliente;
-import com.sofka.api_transaccional.domain.port.in.ClientePortIn;
-import com.sofka.api_transaccional.infraestructura.adapter.in.dto.request.ClienteRequestDTO;
-import com.sofka.api_transaccional.infraestructura.adapter.in.dto.response.ClienteResponseDTO;
-import com.sofka.api_transaccional.infraestructura.adapter.in.mapper.ClienteWebMapper;
+import com.sofka.api_personas.domain.model.Cliente;
+import com.sofka.api_personas.domain.port.in.ClientePortIn;
+import com.sofka.api_personas.infraestructura.adapter.in.dto.request.ClienteRequestDTO;
+import com.sofka.api_personas.infraestructura.adapter.in.dto.response.ClienteResponseDTO;
+import com.sofka.api_personas.infraestructura.adapter.in.mapper.ClienteWebMapper;
 
 @RestController
 @RequestMapping("/clientes")

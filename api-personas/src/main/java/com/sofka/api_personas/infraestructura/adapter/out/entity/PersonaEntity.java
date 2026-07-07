@@ -1,4 +1,4 @@
-package com.sofka.api_transaccional.infraestructura.adapter.out.entity;
+package com.sofka.api_personas.infraestructura.adapter.out.entity;
 
 import java.time.LocalDateTime;
 

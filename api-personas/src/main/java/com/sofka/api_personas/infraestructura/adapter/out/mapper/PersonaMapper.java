@@ -1,7 +1,7 @@
-package com.sofka.api_transaccional.infraestructura.adapter.out.mapper;
+package com.sofka.api_personas.infraestructura.adapter.out.mapper;
 
-import com.sofka.api_transaccional.domain.model.Persona;
-import com.sofka.api_transaccional.infraestructura.adapter.out.entity.PersonaEntity;
+import com.sofka.api_personas.domain.model.Persona;
+import com.sofka.api_personas.infraestructura.adapter.out.entity.PersonaEntity;
 
 public class PersonaMapper {
 

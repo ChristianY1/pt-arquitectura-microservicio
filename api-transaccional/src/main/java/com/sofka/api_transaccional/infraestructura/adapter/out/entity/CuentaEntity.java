@@ -11,8 +11,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -50,9 +48,8 @@ public class CuentaEntity {
     private BigDecimal saldoInicial;
     private boolean estado;
 
-    @ManyToOne
-    @JoinColumn(name = "fk_cliente_id")
-    private ClienteEntity clienteEntity;
+    @Column(name = "fk_cliente_id")
+    private Long clienteId;
 
     @CreatedDate
     private LocalDateTime fechaCreacion;

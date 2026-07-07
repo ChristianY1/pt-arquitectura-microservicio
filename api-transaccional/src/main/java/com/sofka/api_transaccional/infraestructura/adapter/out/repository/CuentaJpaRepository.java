@@ -9,7 +9,7 @@ import com.sofka.api_transaccional.infraestructura.adapter.out.entity.CuentaEnti
 
 public interface CuentaJpaRepository extends JpaRepository<CuentaEntity, Long> {
 
-    List<CuentaEntity> findByClienteEntity_ClienteId(Long clienteId);
+    List<CuentaEntity> findByClienteId(Long clienteId);
 
     Optional<CuentaEntity> findByNumeroCuenta(String numeroCuenta);
 

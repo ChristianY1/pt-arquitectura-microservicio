@@ -10,20 +10,16 @@ import com.sofka.api_transaccional.domain.model.Cuenta;
 import com.sofka.api_transaccional.domain.port.out.CuentaRepositoryPortOut;
 import com.sofka.api_transaccional.infraestructura.adapter.out.entity.CuentaEntity;
 import com.sofka.api_transaccional.infraestructura.adapter.out.mapper.CuentaMapper;
-import com.sofka.api_transaccional.infraestructura.adapter.out.repository.ClienteJpaRepository;
 import com.sofka.api_transaccional.infraestructura.adapter.out.repository.CuentaJpaRepository;
 
 public class CuentaRepositoryAdapter implements CuentaRepositoryPortOut {
 
     private final CuentaJpaRepository cuentaJpaRepository;
 
-    private final ClienteJpaRepository clienteJpaRepository;
-
     private final CuentaMapper cuentaMapper;
 
-    public CuentaRepositoryAdapter(CuentaJpaRepository cuentaJpaRepository, ClienteJpaRepository clienteJpaRepository, CuentaMapper cuentaMapper) {
+    public CuentaRepositoryAdapter(CuentaJpaRepository cuentaJpaRepository, CuentaMapper cuentaMapper) {
         this.cuentaJpaRepository = cuentaJpaRepository;
-        this.clienteJpaRepository = clienteJpaRepository;
         this.cuentaMapper = cuentaMapper;
     }
 
@@ -32,13 +28,9 @@ public class CuentaRepositoryAdapter implements CuentaRepositoryPortOut {
      *
      * @param cuenta datos de la cuenta a guardar
      * @return la cuenta guardada, con el identificador generado por la base de datos
-     * @throws ResponseStatusException 404 si el cliente asociado no existe
      */
     @Override
     public Cuenta crearCuenta(Cuenta cuenta) {
-        if (!clienteJpaRepository.existsById(cuenta.getClienteId())) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente no encontrado");
-        }
         CuentaEntity cuentaEntity = cuentaMapper.toEntityCuenta(cuenta);
         return cuentaMapper.toDomainCuenta(cuentaJpaRepository.save(cuentaEntity));
     }
@@ -106,7 +98,7 @@ public class CuentaRepositoryAdapter implements CuentaRepositoryPortOut {
      */
     @Override
     public List<Cuenta> listarCuentasPorCliente(Long clienteId) {
-        return cuentaJpaRepository.findByClienteEntity_ClienteId(clienteId)
+        return cuentaJpaRepository.findByClienteId(clienteId)
                 .stream()
                 .map(cuentaEntity -> cuentaMapper.toDomainCuenta(cuentaEntity))
                 .toList();

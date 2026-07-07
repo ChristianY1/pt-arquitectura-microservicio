@@ -1,0 +1,120 @@
+{
+  "info": {
+    "_postman_id": "b4e6a3b1-1f2a-4c3e-9d5a-2a7c1e8f6d4a",
+    "name": "api-personas",
+    "description": "Coleccion para probar el CRUD de Cliente (y Persona embebida) en api-personas",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "15321969"
+  },
+  "item": [
+    {
+      "name": "Cliente",
+      "item": [
+        {
+          "name": "Crear Cliente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuario\": \"josorio\",\n  \"contrasenia\": \"1245\",\n  \"estado\": true,\n  \"persona\": {\n    \"nombre\": \"Juan Osorio\",\n    \"genero\": \"M\",\n    \"edad\": 40,\n    \"identificacion\": \"1234567893\",\n    \"direccion\": \"13 junio y Equinoccial\",\n    \"telefono\": \"098874587\"\n  }\n}"
+            },
+            "url": {
+              "raw": "http://localhost:9998/api-personas/clientes/crearCliente",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9998",
+              "path": [
+                "api-personas",
+                "clientes",
+                "crearCliente"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Cliente",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:9998/api-personas/clientes/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9998",
+              "path": [
+                "api-personas",
+                "clientes",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Cliente",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuario\": \"jperez\",\n  \"contrasenia\": \"claveNueva123\",\n  \"estado\": true,\n  \"persona\": {\n    \"nombre\": \"Juan Perez\",\n    \"genero\": \"M\",\n    \"edad\": 31,\n    \"identificacion\": \"1234567890\",\n    \"direccion\": \"Calle Falsa 456\",\n    \"telefono\": \"0999999999\"\n  }\n}"
+            },
+            "url": {
+              "raw": "http://localhost:9998/api-personas/clientes/actualizar/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9998",
+              "path": [
+                "api-personas",
+                "clientes",
+                "actualizar",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar Cliente",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:9998/api-personas/clientes/eliminar/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "9998",
+              "path": [
+                "api-personas",
+                "clientes",
+                "eliminar",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

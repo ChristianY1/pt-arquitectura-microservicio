@@ -30,6 +30,15 @@ CREATE TABLE public.clientes (
 ALTER TABLE public.clientes ADD CONSTRAINT fk_clientes_persona FOREIGN KEY (fk_persona_id) REFERENCES public.personas(persona_id);
 
 
+-- Tabla de referencia local de Clientes en api-transaccional (proyección alimentada por
+-- los eventos de Kafka publicados por api-personas; no tiene FK hacia public.clientes
+-- porque pertenece a un esquema/servicio distinto).
+CREATE TABLE public.clientes_referencia (
+	cliente_id int8 NOT NULL,
+	estado boolean NOT NULL,
+	CONSTRAINT clientes_referencia_pkey PRIMARY KEY (cliente_id)
+);
+
 -- Tabla Cuentas
 CREATE TABLE public.cuentas (
 	cuenta_id int8 NOT NULL,
@@ -77,6 +86,13 @@ INSERT INTO public.clientes (cliente_id,contrasenia,estado,fecha_actualizacion,f
 	 (1,'1234',true,'2026-07-06 03:43:44.899216','2026-07-06 03:43:44.899216','jlema',1),
 	 (2,'5678',true,'2026-07-06 05:40:03.91752','2026-07-06 05:40:03.91752','mmontalvo',2),
 	 (3,'1245',true,'2026-07-06 05:40:52.212847','2026-07-06 05:40:52.212847','josorio',3);
+
+-- Creacion de la copia local de clientes en api-transaccional (normalmente la alimentan
+-- los eventos de Kafka, pero se siembra aquí para que las cuentas de ejemplo validen)
+INSERT INTO public.clientes_referencia (cliente_id,estado) VALUES
+	 (1,true),
+	 (2,true),
+	 (3,true);
 
 -- Creacion de cuentas
 INSERT INTO public.cuentas (cuenta_id,estado,fecha_actualizacion,fecha_creacion,numero_cuenta,saldo_inicial,tipo_cuenta,fk_cliente_id) VALUES

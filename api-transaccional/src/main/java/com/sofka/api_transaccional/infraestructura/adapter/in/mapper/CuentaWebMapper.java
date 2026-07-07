@@ -13,6 +13,7 @@ public class CuentaWebMapper {
                 .tipoCuenta(TipoCuenta.fromCodigo(cuentaRequestDTO.tipoCuenta()))
                 .saldoInicial(cuentaRequestDTO.saldoInicial())
                 .estado(cuentaRequestDTO.estado())
+                .clienteId(cuentaRequestDTO.clienteId())
                 .build();
     }
 
