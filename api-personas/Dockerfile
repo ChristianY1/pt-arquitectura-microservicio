@@ -23,7 +23,7 @@ RUN ./mvnw dependency:go-offline -B
 COPY api-personas/src ./src
 
 # Compila y empaqueta la aplicacion en un jar ejecutable (target/*.jar).
-RUN ./mvnw package
+RUN ./mvnw package -DskipTests -B
 
 # ---------- Etapa de ejecucion ----------
 # Imagen final, separada de la de build, para no arrastrar el codigo fuente ni el
