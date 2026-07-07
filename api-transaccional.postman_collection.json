@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "a872d6b2-ed85-448b-be68-cd197d63814c",
+    "_postman_id": "a40fc150-cb5b-4be9-b6c6-283b89b8eff3",
     "name": "api-transaccional",
     "description": "Coleccion para probar el CRUD de Cuenta y Movimiento",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
@@ -22,7 +22,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"numeroCuenta\": \"496825\",\n  \"tipoCuenta\": 1,\n  \"saldoInicial\": 540,\n  \"estado\": true,\n  \"clienteId\": 2\n}"
+              "raw": "{\n  \"numeroCuenta\": \"09458\",\n  \"tipoCuenta\": 1,\n  \"saldoInicial\": 540,\n  \"estado\": true,\n  \"identificacion\": 1234567893\n}"
             },
             "url": {
               "raw": "http://localhost:9999/api-transaccional/cuentas",
@@ -150,7 +150,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"valor\": -540,\n  \"numeroCuenta\": \"496825\"\n}"
+              "raw": "{\n  \"valor\": 540,\n  \"numeroCuenta\": \"496825\"\n}"
             },
             "url": {
               "raw": "http://localhost:9999/api-transaccional/movimientos",

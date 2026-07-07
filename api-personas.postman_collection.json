@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "b4e6a3b1-1f2a-4c3e-9d5a-2a7c1e8f6d4a",
+    "_postman_id": "a75ebb65-f8b7-4a4e-bc5a-a8c68d03ae60",
     "name": "api-personas",
     "description": "Coleccion para probar el CRUD de Cliente (y Persona embebida) en api-personas",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
@@ -22,7 +22,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"usuario\": \"josorio\",\n  \"contrasenia\": \"1245\",\n  \"estado\": true,\n  \"persona\": {\n    \"nombre\": \"Juan Osorio\",\n    \"genero\": \"M\",\n    \"edad\": 40,\n    \"identificacion\": \"1234567893\",\n    \"direccion\": \"13 junio y Equinoccial\",\n    \"telefono\": \"098874587\"\n  }\n}"
+              "raw": "{\n  \"usuario\": \"c.yunga\",\n  \"contrasenia\": \"1245\",\n  \"estado\": true,\n  \"persona\": {\n    \"nombre\": \"Juan Osorio\",\n    \"genero\": \"M\",\n    \"edad\": 40,\n    \"identificacion\": \"0106691736\",\n    \"direccion\": \"13 junio y Equinoccial\",\n    \"telefono\": \"0939514731\"\n  }\n}"
             },
             "url": {
               "raw": "http://localhost:9998/api-personas/clientes/crearCliente",

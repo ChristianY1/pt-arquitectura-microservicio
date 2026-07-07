@@ -22,9 +22,8 @@ RUN ./mvnw dependency:go-offline -B
 # Se codigo fuente
 COPY api-transaccional/src ./src
 
-# Compila y empaqueta la aplicacion en un jar ejecutable (target/*.jar).
-# -DskipTests evita correr los tests debido a que ya se probo
-RUN ./mvnw package -DskipTests -B
+# Compila y empaqueta la aplicacion en un jar ejecutable 
+RUN ./mvnw package
 
 # ---------- Etapa de ejecucion ----------
 # Imagen final, separada de la de build, para no arrastrar el codigo fuente ni el

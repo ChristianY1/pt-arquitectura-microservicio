@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 public record CuentaResponseDTO(
         String numeroCuenta,
-        int tipoCuenta,
+        String tipoCuenta,
         BigDecimal saldoInicial,
         boolean estado) {
 }

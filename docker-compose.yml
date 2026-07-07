@@ -65,7 +65,7 @@ services:
   api-transaccional:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: api-transaccional/Dockerfile
     container_name: api-transaccional
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db-transaccional:5432/${POSTGRES_DB_TRANSACCIONAL}

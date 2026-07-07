@@ -42,6 +42,7 @@ INSERT INTO public.clientes (cliente_id,contrasenia,estado,fecha_actualizacion,f
 	 (3,'1245',true,'2026-07-06 05:40:52.212847','2026-07-06 05:40:52.212847','josorio',3);
 
 -- Secuencias: Hibernate (GenerationType.AUTO sobre PostgreSQL) genera por defecto
--- una secuencia por tabla llamada "<tabla>_seq"
-CREATE SEQUENCE IF NOT EXISTS public.personas_seq START WITH 1000;
-CREATE SEQUENCE IF NOT EXISTS public.clientes_seq START WITH 1000;
+-- una secuencia por tabla llamada "<tabla>_seq". Arrancan justo después del último id
+-- sembrado arriba, ya que esos inserts no pasan por la secuencia.
+CREATE SEQUENCE IF NOT EXISTS public.personas_seq START WITH 4;
+CREATE SEQUENCE IF NOT EXISTS public.clientes_seq START WITH 4;

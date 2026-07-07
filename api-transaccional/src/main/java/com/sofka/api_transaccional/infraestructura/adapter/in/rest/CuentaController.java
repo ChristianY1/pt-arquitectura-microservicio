@@ -37,7 +37,7 @@ public class CuentaController {
     @PostMapping
     ResponseEntity<Map<String, Object>> crearCuenta(@RequestBody CuentaRequestDTO cuentaRequestDTO) {
         Cuenta cuenta = cuentaWebMapper.toDomainCuenta(cuentaRequestDTO);
-        Cuenta cuentaCreada = cuentaPortIn.crearCuenta(cuenta);
+        Cuenta cuentaCreada = cuentaPortIn.crearCuenta(cuenta, cuentaRequestDTO.identificacion());
         CuentaResponseDTO cuentaResponse = cuentaWebMapper.toResponseCuenta(cuentaCreada);
         return ResponseBuilder.build(HttpStatus.OK, "Cuenta creada exitosamente", cuentaResponse);
     }

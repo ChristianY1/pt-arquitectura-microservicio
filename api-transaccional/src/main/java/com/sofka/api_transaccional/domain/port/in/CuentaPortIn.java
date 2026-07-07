@@ -7,7 +7,7 @@ import com.sofka.api_transaccional.domain.model.Cuenta;
 
 public interface CuentaPortIn {
 
-    Cuenta crearCuenta(Cuenta cuenta);
+    Cuenta crearCuenta(Cuenta cuenta, String identificacionCliente);
 
     Optional<Cuenta> buscarCuenta(Long cuentaId);
 

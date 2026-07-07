@@ -25,24 +25,27 @@ public class CuentaService implements CuentaPortIn {
 
     /**
      * Crea una nueva cuenta, validando que el número de cuenta sea válido y único,
-     * y que el cliente asociado exista y esté activo en la copia local alimentada por Kafka.
+     * y que el cliente con la cédula indicada exista y esté activo en la copia local
+     * alimentada por Kafka (no se llama en vivo a api-personas).
      *
      * @param cuenta datos de la cuenta a crear
+     * @param identificacionCliente cédula del cliente al que se le crea la cuenta
      * @return la cuenta creada, con el identificador generado
      * @throws ResponseStatusException 400 si el número de cuenta es inválido, ya existe
      *                                  o el cliente no está activo; 404 si el cliente no existe
      */
     @Override
-    public Cuenta crearCuenta(Cuenta cuenta) {
+    public Cuenta crearCuenta(Cuenta cuenta, String identificacionCliente) {
         validarNumeroCuenta(cuenta.getNumeroCuenta());
         if (cuentaRepositoryPortOut.buscarCuentaPorNumero(cuenta.getNumeroCuenta()).isPresent()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ya existe una cuenta con este número");
         }
-        Cliente cliente = clienteRepositoryPortOut.buscarCliente(cuenta.getClienteId())
+        Cliente cliente = clienteRepositoryPortOut.buscarClientePorIdentificacion(identificacionCliente)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente no encontrado"));
         if (!cliente.isEstado()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El cliente no está activo");
         }
+        cuenta.setClienteId(cliente.getClienteId());
         return cuentaRepositoryPortOut.crearCuenta(cuenta);
     }
 

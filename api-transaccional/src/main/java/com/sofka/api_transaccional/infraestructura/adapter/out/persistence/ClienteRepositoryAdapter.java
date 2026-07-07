@@ -25,6 +25,12 @@ public class ClienteRepositoryAdapter implements ClienteRepositoryPortOut {
                 .map(clienteMapper::toDomainCliente);
     }
 
+    @Override
+    public Optional<Cliente> buscarClientePorIdentificacion(String identificacion) {
+        return clienteJpaRepository.findByIdentificacion(identificacion)
+                .map(clienteMapper::toDomainCliente);
+    }
+
     /**
      * Guarda o actualiza la copia local del cliente (upsert por id, tal como llega en el evento de Kafka).
      *

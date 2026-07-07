@@ -64,6 +64,7 @@ INSERT INTO public.movimientos (movimiento_id,fecha_actualizacion,fecha_creacion
 	 (4,'2026-07-06 05:49:28.737092','2026-07-06 05:49:28.737092','2026-07-06 05:49:28.734026',0.00,'RETIRO',-540.00,4);
 
 -- Secuencias: Hibernate (GenerationType.AUTO sobre PostgreSQL) genera por defecto
--- una secuencia por tabla llamada "<tabla>_seq"
-CREATE SEQUENCE IF NOT EXISTS public.cuentas_seq START WITH 1000;
-CREATE SEQUENCE IF NOT EXISTS public.movimientos_seq START WITH 1000;
+-- una secuencia por tabla llamada "<tabla>_seq". Arrancan justo después del último id
+-- sembrado arriba, ya que esos inserts no pasan por la secuencia.
+CREATE SEQUENCE IF NOT EXISTS public.cuentas_seq START WITH 6;
+CREATE SEQUENCE IF NOT EXISTS public.movimientos_seq START WITH 5;
