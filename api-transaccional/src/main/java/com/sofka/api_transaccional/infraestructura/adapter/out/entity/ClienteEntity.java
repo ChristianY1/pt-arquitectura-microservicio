@@ -21,6 +21,10 @@ public class ClienteEntity {
     @Id
     private Long clienteId;
 
+    private String identificacion;
+
+    private String nombre;
+
     private boolean estado;
 
 }

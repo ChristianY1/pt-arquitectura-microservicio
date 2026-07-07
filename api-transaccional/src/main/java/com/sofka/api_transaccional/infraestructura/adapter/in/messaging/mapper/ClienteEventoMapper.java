@@ -8,6 +8,8 @@ public class ClienteEventoMapper {
     public Cliente toDomainCliente(ClienteEventoDTO clienteEventoDTO) {
         return Cliente.builder()
                 .clienteId(clienteEventoDTO.clienteId())
+                .identificacion(clienteEventoDTO.identificacion())
+                .nombre(clienteEventoDTO.nombre())
                 .estado(clienteEventoDTO.estado())
                 .build();
     }

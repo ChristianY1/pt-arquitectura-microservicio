@@ -13,7 +13,6 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
-import org.springframework.kafka.support.serializer.JsonDeserializer;
 
 import com.sofka.api_transaccional.application.service.ClienteProyeccionService;
 import com.sofka.api_transaccional.application.service.CuentaService;
@@ -26,8 +25,8 @@ import com.sofka.api_transaccional.domain.port.out.CuentaRepositoryPortOut;
 import com.sofka.api_transaccional.domain.port.out.MovimientoRepositoryPortOut;
 import com.sofka.api_transaccional.infraestructura.adapter.in.mapper.CuentaWebMapper;
 import com.sofka.api_transaccional.infraestructura.adapter.in.mapper.MovimientoWebMapper;
+import com.sofka.api_transaccional.infraestructura.adapter.in.messaging.ClienteEventoDeserializer;
 import com.sofka.api_transaccional.infraestructura.adapter.in.messaging.ClienteEventoListener;
-import com.sofka.api_transaccional.infraestructura.adapter.in.messaging.dto.ClienteEventoDTO;
 import com.sofka.api_transaccional.infraestructura.adapter.in.messaging.mapper.ClienteEventoMapper;
 import com.sofka.api_transaccional.infraestructura.adapter.out.mapper.ClienteMapper;
 import com.sofka.api_transaccional.infraestructura.adapter.out.mapper.CuentaMapper;
@@ -97,10 +96,7 @@ public class BeanConfig {
         config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         config.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-        config.put(JsonDeserializer.TRUSTED_PACKAGES, ClienteEventoDTO.class.getPackageName());
-        config.put(JsonDeserializer.VALUE_DEFAULT_TYPE, ClienteEventoDTO.class.getName());
-        config.put(JsonDeserializer.USE_TYPE_INFO_HEADERS, false);
+        config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ClienteEventoDeserializer.class);
         return new DefaultKafkaConsumerFactory<>(config);
     }
 

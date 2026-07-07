@@ -7,7 +7,7 @@ spring:
   application:
     name: api-personas
   datasource:
-    url: jdbc:postgresql://localhost:5432/db-fintech
+    url: jdbc:postgresql://localhost:5432/db-personas
     username: postgres
     password: postgres
     driverClassName: org.postgresql.Driver

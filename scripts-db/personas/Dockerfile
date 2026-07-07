@@ -3,4 +3,4 @@
 # cero obtenga los datos precargados sin ejecutar nada manualmente.
 FROM postgres:16-alpine
 
-COPY BaseDatos.sql /docker-entrypoint-initdb.d/01-base-datos.sql
+COPY BaseDatosPersonas.sql /docker-entrypoint-initdb.d/01-base-datos-personas.sql

@@ -1,19 +1,38 @@
 services:
-  db:
+  db-personas:
     build:
-      context: ./scripts-db
+      context: ./scripts-db/personas
       dockerfile: Dockerfile
-    container_name: db-fintech
+    container_name: db-personas
     environment:
-      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_DB: ${POSTGRES_DB_PERSONAS}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - "${DB_PORT}:5432"
+      - "${DB_PERSONAS_PORT}:5432"
     volumes:
-      - db-fintech-data:/var/lib/postgresql/data
+      - db-personas-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB_PERSONAS}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  db-transaccional:
+    build:
+      context: ./scripts-db/transaccional
+      dockerfile: Dockerfile
+    container_name: db-transaccional
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB_TRANSACCIONAL}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "${DB_TRANSACCIONAL_PORT}:5432"
+    volumes:
+      - db-transaccional-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB_TRANSACCIONAL}"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -49,14 +68,14 @@ services:
       dockerfile: Dockerfile
     container_name: api-transaccional
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/db-fintech
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db-transaccional:5432/${POSTGRES_DB_TRANSACCIONAL}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     ports:
       - "${APP_PORT}:8080"
     depends_on:
-      db:
+      db-transaccional:
         condition: service_healthy
       kafka:
         condition: service_healthy
@@ -67,17 +86,18 @@ services:
       dockerfile: api-personas/Dockerfile
     container_name: api-personas
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/db-fintech
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db-personas:5432/${POSTGRES_DB_PERSONAS}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     ports:
       - "${PERSONAS_APP_PORT}:8081"
     depends_on:
-      db:
+      db-personas:
         condition: service_healthy
       kafka:
         condition: service_healthy
 
 volumes:
-  db-fintech-data:
+  db-personas-data:
+  db-transaccional-data:

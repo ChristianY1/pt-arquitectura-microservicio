@@ -19,7 +19,7 @@ public class ClienteEventoPublisherAdapter implements ClienteEventoPublisherPort
 
     @Override
     public void publicarCliente(Cliente cliente) {
-        ClienteEventoDTO evento = new ClienteEventoDTO(cliente.getClienteId(), cliente.isEstado());
+        ClienteEventoDTO evento = new ClienteEventoDTO(cliente.getClienteId(), cliente.getIdentificacion(), cliente.getNombre(), cliente.isEstado());
         kafkaTemplate.send(topicClientes, String.valueOf(cliente.getClienteId()), evento);
     }
 

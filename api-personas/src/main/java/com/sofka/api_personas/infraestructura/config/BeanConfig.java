@@ -13,7 +13,6 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
-import org.springframework.kafka.support.serializer.JsonSerializer;
 
 import com.sofka.api_personas.application.service.ClienteService;
 import com.sofka.api_personas.domain.port.in.ClientePortIn;
@@ -23,6 +22,7 @@ import com.sofka.api_personas.infraestructura.adapter.in.mapper.ClienteWebMapper
 import com.sofka.api_personas.infraestructura.adapter.out.mapper.ClienteMapper;
 import com.sofka.api_personas.infraestructura.adapter.out.mapper.PersonaMapper;
 import com.sofka.api_personas.infraestructura.adapter.out.messaging.ClienteEventoPublisherAdapter;
+import com.sofka.api_personas.infraestructura.adapter.out.messaging.ClienteEventoSerializer;
 import com.sofka.api_personas.infraestructura.adapter.out.persistence.ClienteRepositoryAdapter;
 import com.sofka.api_personas.infraestructura.adapter.out.repository.ClienteJpaRepository;
 
@@ -41,8 +41,7 @@ public class BeanConfig {
         Map<String, Object> config = new HashMap<>();
         config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-        config.put(JsonSerializer.ADD_TYPE_INFO_HEADERS, false);
+        config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, ClienteEventoSerializer.class);
         return new DefaultKafkaProducerFactory<>(config);
     }
 
