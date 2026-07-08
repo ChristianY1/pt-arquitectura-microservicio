@@ -6,14 +6,21 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.server.ResponseStatusException;
+
+import com.sofka.api_personas.domain.exception.ReglaNegocioException;
+import com.sofka.api_personas.domain.exception.RecursoNoEncontradoException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(ResponseStatusException.class)
-    public ResponseEntity<Map<String, Object>> handleResponseStatusException(ResponseStatusException ex) {
-        return ResponseBuilder.build(HttpStatus.valueOf(ex.getStatusCode().value()), ex.getReason(), null);
+    @ExceptionHandler(RecursoNoEncontradoException.class)
+    public ResponseEntity<Map<String, Object>> handleRecursoNoEncontrado(RecursoNoEncontradoException ex) {
+        return ResponseBuilder.build(HttpStatus.NOT_FOUND, ex.getMessage(), null);
+    }
+
+    @ExceptionHandler(ReglaNegocioException.class)
+    public ResponseEntity<Map<String, Object>> handleReglaNegocio(ReglaNegocioException ex) {
+        return ResponseBuilder.build(HttpStatus.BAD_REQUEST, ex.getMessage(), null);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

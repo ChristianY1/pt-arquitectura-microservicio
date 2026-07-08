@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
+import com.sofka.api_transaccional.domain.exception.RecursoNoEncontradoException;
 import com.sofka.api_transaccional.domain.model.Cuenta;
 import com.sofka.api_transaccional.domain.port.in.CuentaPortIn;
 import com.sofka.api_transaccional.infraestructura.adapter.in.dto.request.CuentaRequestDTO;
@@ -45,7 +45,7 @@ public class CuentaController {
     @GetMapping("/{cuentaId}")
     ResponseEntity<Map<String, Object>> buscarCuenta(@PathVariable Long cuentaId) {
         Cuenta cuenta = cuentaPortIn.buscarCuenta(cuentaId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cuenta no encontrada"));
+                .orElseThrow(() -> new RecursoNoEncontradoException("Cuenta no encontrada"));
         CuentaResponseDTO cuentaResponse = cuentaWebMapper.toResponseCuenta(cuenta);
         return ResponseBuilder.build(HttpStatus.OK, "Cuenta encontrada", cuentaResponse);
     }

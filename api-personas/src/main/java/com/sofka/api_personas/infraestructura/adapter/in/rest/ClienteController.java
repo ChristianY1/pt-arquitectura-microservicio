@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
+import com.sofka.api_personas.domain.exception.RecursoNoEncontradoException;
 import com.sofka.api_personas.domain.model.Cliente;
 import com.sofka.api_personas.domain.port.in.ClientePortIn;
 import com.sofka.api_personas.infraestructura.adapter.in.dto.request.ClienteRequestDTO;
@@ -43,7 +43,7 @@ public class ClienteController {
     @GetMapping("/{clienteId}")
     ResponseEntity<Map<String, Object>> buscarCliente(@PathVariable Long clienteId){
         Cliente cliente = clientePortIn.buscarCliente(clienteId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente no encontrado"));
+                .orElseThrow(() -> new RecursoNoEncontradoException("Cliente no encontrado"));
         ClienteResponseDTO clienteResponse = clienteWebMapper.toResponseCliente(cliente);
         return ResponseBuilder.build(HttpStatus.OK, "Cliente encontrado", clienteResponse);
     }

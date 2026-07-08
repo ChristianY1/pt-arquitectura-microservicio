@@ -1,10 +1,8 @@
 package com.sofka.api_personas.application.service;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
-
 import java.util.Optional;
 
+import com.sofka.api_personas.domain.exception.ReglaNegocioException;
 import com.sofka.api_personas.domain.model.Cliente;
 import com.sofka.api_personas.domain.port.in.ClientePortIn;
 import com.sofka.api_personas.domain.port.out.ClienteEventoPublisherPortOut;
@@ -29,17 +27,17 @@ public class ClienteService implements ClientePortIn {
      *
      * @param cliente datos del cliente a crear
      * @return el cliente creado, con los identificadores generados
-     * @throws ResponseStatusException 400 si la cédula no es válida, si ya existe un cliente
-     *                                  con esa cédula o si el usuario ya está en uso
+     * @throws ReglaNegocioException si la cédula no es válida, si ya existe un cliente
+     *                                con esa cédula o si el usuario ya está en uso
      */
     @Override
     public Cliente crearCliente(Cliente cliente) {
         validarIdentificacion(cliente.getIdentificacion());
         if (clienteRepositoryPortOut.buscarClientePorIdentificacion(cliente.getIdentificacion()).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ya existe un cliente con esta cédula");
+            throw new ReglaNegocioException("Ya existe un cliente con esta cédula");
         }
         if (clienteRepositoryPortOut.existeUsuario(cliente.getUsuario())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El usuario ya está en uso");
+            throw new ReglaNegocioException("El usuario ya está en uso");
         }
         Cliente clienteCreado = clienteRepositoryPortOut.crearCliente(cliente);
         clienteEventoPublisherPortOut.publicarCliente(clienteCreado);
@@ -73,7 +71,7 @@ public class ClienteService implements ClientePortIn {
      *
      * @param cliente datos actualizados del cliente
      * @return el cliente actualizado
-     * @throws ResponseStatusException 400 si la cédula no es válida
+     * @throws ReglaNegocioException si la cédula no es válida
      */
     @Override
     public Cliente actualizarCliente(Cliente cliente) {
@@ -97,11 +95,11 @@ public class ClienteService implements ClientePortIn {
      * Valida que la cédula no sea nula y tenga exactamente 10 caracteres.
      *
      * @param identificacion cédula a validar
-     * @throws ResponseStatusException 400 si la cédula es nula o no tiene la longitud esperada
+     * @throws ReglaNegocioException si la cédula es nula o no tiene la longitud esperada
      */
     private void validarIdentificacion(String identificacion) {
         if (identificacion == null || identificacion.length() != LONGITUD_IDENTIFICACION) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cédula no válida");
+            throw new ReglaNegocioException("Cédula no válida");
         }
     }
 

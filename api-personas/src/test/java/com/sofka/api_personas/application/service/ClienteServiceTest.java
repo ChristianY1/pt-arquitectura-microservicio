@@ -8,9 +8,8 @@ import static org.mockito.Mockito.when;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
 
+import com.sofka.api_personas.domain.exception.ReglaNegocioException;
 import com.sofka.api_personas.domain.model.Cliente;
 import com.sofka.api_personas.domain.port.out.ClienteEventoPublisherPortOut;
 import com.sofka.api_personas.domain.port.out.ClienteRepositoryPortOut;
@@ -32,7 +31,7 @@ class ClienteServiceTest {
      * lanzar Exception con estado 400 antes de intentar persistir nada.
      */
     @Test
-    void crearCliente_conIdentificacionYaRegistrada_lanzaResponseStatusException() {
+    void crearCliente_conIdentificacionYaRegistrada_lanzaReglaNegocioException() {
         Cliente cliente = Cliente.builder()
                 .usuario("jperez")
                 .contrasenia("clave123")
@@ -42,10 +41,9 @@ class ClienteServiceTest {
 
         when(clienteRepositoryPortOut.buscarClientePorIdentificacion("1234567890")).thenReturn(Optional.of(cliente));
 
-        ResponseStatusException excepcion = assertThrows(ResponseStatusException.class, () -> clienteService.crearCliente(cliente));
+        ReglaNegocioException excepcion = assertThrows(ReglaNegocioException.class, () -> clienteService.crearCliente(cliente));
 
-        assertEquals(HttpStatus.BAD_REQUEST, excepcion.getStatusCode());
-        assertEquals("Ya existe un cliente con esta cédula", excepcion.getReason());
+        assertEquals("Ya existe un cliente con esta cédula", excepcion.getMessage());
     }
 
 }

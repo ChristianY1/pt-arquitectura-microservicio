@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
+import com.sofka.api_transaccional.domain.exception.RecursoNoEncontradoException;
 import com.sofka.api_transaccional.domain.model.Cuenta;
 import com.sofka.api_transaccional.domain.model.Movimiento;
 import com.sofka.api_transaccional.domain.port.in.CuentaPortIn;
@@ -48,7 +48,7 @@ public class MovimientoController {
     @PostMapping
     ResponseEntity<Map<String, Object>> crearMovimiento(@RequestBody MovimientoRequestDTO movimientoRequestDTO) {
         Cuenta cuenta = cuentaPortIn.buscarCuentaPorNumero(movimientoRequestDTO.numeroCuenta())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cuenta no encontrada"));
+                .orElseThrow(() -> new RecursoNoEncontradoException("Cuenta no encontrada"));
         Movimiento movimiento = movimientoWebMapper.toDomainMovimiento(movimientoRequestDTO);
         movimiento.setCuentaId(cuenta.getCuentaId());
         Movimiento movimientoCreado = movimientoPortIn.crearMovimiento(movimiento);
@@ -59,7 +59,7 @@ public class MovimientoController {
     @GetMapping("/{movimientoId}")
     ResponseEntity<Map<String, Object>> buscarMovimiento(@PathVariable Long movimientoId) {
         Movimiento movimiento = movimientoPortIn.buscarMovimiento(movimientoId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Movimiento no encontrado"));
+                .orElseThrow(() -> new RecursoNoEncontradoException("Movimiento no encontrado"));
         MovimientoResponseDTO movimientoResponse = movimientoWebMapper.toResponseMovimiento(movimiento);
         return ResponseBuilder.build(HttpStatus.OK, "Movimiento encontrado", movimientoResponse);
     }
