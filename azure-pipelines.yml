@@ -11,7 +11,7 @@ steps:
   displayName: "dar permisos de ejecucion a mvnw"
 
 - script: ./mvnw test
-  workingDirectory: ./mvnw test
+  workingDirectory: api-personas
   displayName: "Build y test de api-personas"
 
 
