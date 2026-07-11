@@ -6,6 +6,14 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
+- script: |
+    POSTGRES_DB_PERSONAS=db-personas \
+    POSTGRES_USER=postgres \
+    POSTGRES_PASSWORD=postgres \
+    DB_PERSONAS_PORT=5432 \
+    docker compose up -d --wait db-personas
+  displayName: "Levantar base de datos db-personas"
+
 - script: chmod +x ./mvnw
   workingDirectory: api-personas
   displayName: "dar permisos de ejecucion a mvnw"
