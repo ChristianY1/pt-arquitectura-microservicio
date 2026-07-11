@@ -1,0 +1,18 @@
+trigger:
+- main
+- feature-despliegue-azure
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- script: chmod +x ./mvnw
+  workingDirectory: api-personas
+  displayName: "dar permisos de ejecucion a mvnw"
+
+- script: ./mvnw test
+  workingDirectory: ./mvnw test
+  displayName: "Build y test de api-personas"
+
+
+
