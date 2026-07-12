@@ -70,3 +70,7 @@ Hay una colección por servicio:
 - `api-personas.postman_collection.json`: CRUD de Cliente (`http://localhost:9998/api-personas/...`).
 - `api-transaccional.postman_collection.json`: CRUD de Cuenta y Movimiento (`http://localhost:9999/api-transaccional/...`).
 
+
+## Implementacion de Pipelines en AzureDevos
+Se crea el archivo azure-pipelines.yml en donde estan los pasos que siguen los pipelines para la 
+compilacion y ejecucion del proyecto
