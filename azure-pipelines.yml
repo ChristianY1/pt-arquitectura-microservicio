@@ -27,7 +27,7 @@ steps:
 # API-TRANSACCIONAL
 - script: |
     POSTGRES_DB_TRANSACCIONAL:db-transaccional \
-    POTGRES_USER=postgres \
+    POSTGRES_USER=postgres \
     POSTGRES_PASSOWRD=postgres \
     DB_TRANSACCIONAL_PORT=5454 \
     docker compose up -d --wait db-transaccional 
