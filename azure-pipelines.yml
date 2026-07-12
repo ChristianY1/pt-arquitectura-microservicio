@@ -5,6 +5,7 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
+# API-PERSONAS
 steps:
 - script: |
     POSTGRES_DB_PERSONAS=db-personas \
@@ -14,7 +15,6 @@ steps:
     docker compose up -d --wait db-personas
   displayName: "Levantar base de datos db-personas"
 
-# API-PERSONAS
 - script: chmod +x ./mvnw
   workingDirectory: api-personas
   displayName: "dar permisos de ejecucion a mvnw"
@@ -23,7 +23,17 @@ steps:
   workingDirectory: api-personas
   displayName: "Build y test de api-personas"
 
+
 # API-TRANSACCIONAL
+- script: |
+    POSTGRES_DB_TRANSACCIONAL:db-transaccional \
+    POTGRES_USER=postgres \
+    POSTGRES_PASSOWRD=postgres \
+    DB_TRANSACCIONAL_PORT=5454 \
+    docker compose up -d --wait db-transaccional 
+  displayName: "Levantar base de datos db-transaccional"
+
+
 - script: chmod +x ./mvnw
   workingDirectory: api-transaccional
   displayName: "dar permisos de ejecucion a mvnw"
