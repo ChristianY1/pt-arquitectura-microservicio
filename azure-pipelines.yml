@@ -26,7 +26,7 @@ steps:
 
 # API-TRANSACCIONAL
 - script: |
-    POSTGRES_DB_TRANSACCIONAL:db-transaccional \
+    POSTGRES_DB_TRANSACCIONAL=db-transaccional \
     POSTGRES_USER=postgres \
     POSTGRES_PASSOWRD=postgres \
     DB_TRANSACCIONAL_PORT=5454 \
