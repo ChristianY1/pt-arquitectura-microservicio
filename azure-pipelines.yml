@@ -28,10 +28,10 @@ steps:
 - script: |
     POSTGRES_DB_TRANSACCIONAL=db-transaccional \
     POSTGRES_USER=postgres \
-    POSTGRES_PASSOW0RD=postgres \
-    DB_TRANSACCIONAL_PORT=5454 \
+    POSTGRES_PASSWORD=postgres \
+    DB_TRANSACCIONAL_PORT=5432 \
     KAFKA_PORT=29092 \
-    docker compose up -d --wait db-transaccional 
+    docker compose up -d --wait db-transaccional kafka
   displayName: "Levantar base de datos db-transaccional"
 
 
