@@ -4,9 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
-
+import com.sofka.api_transaccional.domain.exception.ReglaNegocioException;
 import com.sofka.api_transaccional.domain.model.Movimiento;
 import com.sofka.api_transaccional.domain.model.ReporteMovimiento;
 import com.sofka.api_transaccional.domain.model.TipoMovimiento;
@@ -18,7 +16,7 @@ public class MovimientoWebMapper {
 
     public Movimiento toDomainMovimiento(MovimientoRequestDTO movimientoRequestDTO) {
         if (movimientoRequestDTO.valor() == null || movimientoRequestDTO.valor().compareTo(BigDecimal.ZERO) == 0) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El valor debe ser distinto de cero");
+            throw new ReglaNegocioException("El valor debe ser distinto de cero");
         }
         BigDecimal valor = movimientoRequestDTO.valor().setScale(2, RoundingMode.HALF_UP);
         TipoMovimiento tipoMovimiento = valor.compareTo(BigDecimal.ZERO) >= 0 ? TipoMovimiento.DEPOSITO : TipoMovimiento.RETIRO;

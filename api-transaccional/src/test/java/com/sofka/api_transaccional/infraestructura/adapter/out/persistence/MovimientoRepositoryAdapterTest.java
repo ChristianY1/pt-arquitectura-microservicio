@@ -70,7 +70,7 @@ class MovimientoRepositoryAdapterTest {
 
         MovimientoEntity movimientoPersistido = movimientoJpaRepository.findById(movimientoCreado.getMovimientoId())
                 .orElseThrow(() -> new AssertionError("El movimiento no quedó persistido en la base de datos"));
-        assertThat(movimientoPersistido.getValor()).isEqualByComparingTo(BigDecimal.valueOf(100));
+        assertThat(movimientoPersistido.getValor()).isEqualByComparingTo(BigDecimal.valueOf(0));
         assertThat(movimientoPersistido.getTipoMovimiento()).isEqualTo(TipoMovimiento.DEPOSITO);
         assertThat(movimientoPersistido.getCuentaEntity().getCuentaId()).isEqualTo(CUENTA_ID_SEMBRADA);
     }

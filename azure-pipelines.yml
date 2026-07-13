@@ -1,0 +1,69 @@
+trigger:
+- main
+- feature-despliegue-azure
+
+pool:
+  vmImage: ubuntu-latest
+
+# API-PERSONAS
+steps:
+- script: |
+    POSTGRES_DB_PERSONAS=db-personas \
+    POSTGRES_USER=postgres \
+    POSTGRES_PASSWORD=postgres \
+    DB_PERSONAS_PORT=5432 \
+    docker compose up -d --wait db-personas
+  displayName: "Levantar base de datos db-personas"
+
+- script: chmod +x ./mvnw
+  workingDirectory: api-personas
+  displayName: "dar permisos de ejecucion a mvnw"
+
+- script: ./mvnw test
+  workingDirectory: api-personas
+  displayName: "Build y test de api-personas"
+
+
+# API-TRANSACCIONAL
+- script: |
+    POSTGRES_DB_TRANSACCIONAL=db-transaccional \
+    POSTGRES_USER=postgres \
+    POSTGRES_PASSWORD=postgres \
+    DB_TRANSACCIONAL_PORT=5433 \
+    KAFKA_PORT=29092 \
+    docker compose up -d --wait db-transaccional kafka
+  displayName: "Levantar base de datos db-transaccional"
+
+
+- script: chmod +x ./mvnw
+  workingDirectory: api-transaccional
+  displayName: "dar permisos de ejecucion a mvnw"
+
+- script: ./mvnw test
+  workingDirectory: api-transaccional
+  displayName: "Build y test de api-transaccional"
+
+# CD - Build, push a ACR y deploy a AKS
+- task: AzureCLI@2
+  displayName: "Build, push y deploy a AKS"
+  inputs:
+    azureSubscription: 'conexion-azure-microservicios'
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: |
+      az acr login --name acrchristianmicropt2026
+
+      docker build -t acrchristianmicropt2026.azurecr.io/api-personas:$(Build.BuildId) -f api-personas/Dockerfile .
+      docker push acrchristianmicropt2026.azurecr.io/api-personas:$(Build.BuildId)
+
+      docker build -t acrchristianmicropt2026.azurecr.io/api-transaccional:$(Build.BuildId) -f api-transaccional/Dockerfile .
+      docker push acrchristianmicropt2026.azurecr.io/api-transaccional:$(Build.BuildId)
+
+      az aks get-credentials --resource-group rg-arquitectura-microservicios --name aks-arquitectura-microservicios-v2 --overwrite-existing
+
+      kubectl apply -f k8s/api-personas.yaml
+      kubectl apply -f k8s/api-transaccional.yaml
+
+      kubectl set image deployment/api-personas api-personas=acrchristianmicropt2026.azurecr.io/api-personas:$(Build.BuildId)
+      kubectl set image deployment/api-transaccional api-transaccional=acrchristianmicropt2026.azurecr.io/api-transaccional:$(Build.BuildId)
+

@@ -1,10 +1,8 @@
 package com.sofka.api_personas.infraestructura.adapter.out.persistence;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
-
 import java.util.Optional;
 
+import com.sofka.api_personas.domain.exception.RecursoNoEncontradoException;
 import com.sofka.api_personas.domain.model.Cliente;
 import com.sofka.api_personas.domain.port.out.ClienteRepositoryPortOut;
 import com.sofka.api_personas.infraestructura.adapter.out.entity.ClienteEntity;
@@ -75,12 +73,12 @@ public class ClienteRepositoryAdapter implements ClienteRepositoryPortOut {
      *
      * @param cliente datos actualizados del cliente
      * @return el cliente actualizado
-     * @throws ResponseStatusException 404 si el cliente no existe
+     * @throws RecursoNoEncontradoException si el cliente no existe
      */
     @Override
     public Cliente actualizarCliente(Cliente cliente) {
         Cliente clienteExistente = buscarCliente(cliente.getClienteId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente no encontrado"));
+                .orElseThrow(() -> new RecursoNoEncontradoException("Cliente no encontrado"));
         cliente.setPersonaId(clienteExistente.getPersonaId());
         ClienteEntity clienteEntity = clienteMapper.toEntityCliente(cliente);
         return clienteMapper.toDomainCliente(clienteJpaRepository.save(clienteEntity));
@@ -90,12 +88,12 @@ public class ClienteRepositoryAdapter implements ClienteRepositoryPortOut {
      * Elimina de la base de datos un cliente por su identificador.
      *
      * @param clienteId id del cliente a eliminar
-     * @throws ResponseStatusException 404 si el cliente no existe
+     * @throws RecursoNoEncontradoException si el cliente no existe
      */
     @Override
     public void eliminarCliente(Long clienteId) {
         if (buscarCliente(clienteId).isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente no encontrado");
+            throw new RecursoNoEncontradoException("Cliente no encontrado");
         }
 
         clienteJpaRepository.deleteById(clienteId);

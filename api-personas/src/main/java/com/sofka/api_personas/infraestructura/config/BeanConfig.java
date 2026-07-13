@@ -3,7 +3,9 @@ package com.sofka.api_personas.infraestructura.config;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.config.SaslConfigs;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -37,11 +39,22 @@ public class BeanConfig {
     }
 
     @Bean
-    ProducerFactory<String, Object> producerFactory(@Value("${spring.kafka.bootstrap-servers}") String bootstrapServers){
+    ProducerFactory<String, Object> producerFactory(
+            @Value("${spring.kafka.bootstrap-servers}") String bootstrapServers,
+            @Value("${spring.kafka.properties.security.protocol:PLAINTEXT}") String securityProtocol,
+            @Value("${spring.kafka.properties.sasl.mechanism:}") String saslMechanism,
+            @Value("${spring.kafka.properties.sasl.jaas.config:}") String saslJaasConfig){
         Map<String, Object> config = new HashMap<>();
         config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, ClienteEventoSerializer.class);
+        config.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, securityProtocol);
+        if (!saslMechanism.isBlank()) {
+            config.put(SaslConfigs.SASL_MECHANISM, saslMechanism);
+        }
+        if (!saslJaasConfig.isBlank()) {
+            config.put(SaslConfigs.SASL_JAAS_CONFIG, saslJaasConfig);
+        }
         return new DefaultKafkaProducerFactory<>(config);
     }
 

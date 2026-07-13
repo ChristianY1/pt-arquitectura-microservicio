@@ -3,7 +3,9 @@ package com.sofka.api_transaccional.infraestructura.config;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.common.config.SaslConfigs;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -91,12 +93,22 @@ public class BeanConfig {
 
     @Bean
     ConsumerFactory<String, Object> consumerFactory(@Value("${spring.kafka.bootstrap-servers}") String bootstrapServers,
-                                                     @Value("${spring.kafka.consumer.group-id}") String groupId){
+                                                     @Value("${spring.kafka.consumer.group-id}") String groupId,
+                                                     @Value("${spring.kafka.properties.security.protocol:PLAINTEXT}") String securityProtocol,
+                                                     @Value("${spring.kafka.properties.sasl.mechanism:}") String saslMechanism,
+                                                     @Value("${spring.kafka.properties.sasl.jaas.config:}") String saslJaasConfig){
         Map<String, Object> config = new HashMap<>();
         config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         config.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ClienteEventoDeserializer.class);
+        config.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, securityProtocol);
+        if (!saslMechanism.isBlank()) {
+            config.put(SaslConfigs.SASL_MECHANISM, saslMechanism);
+        }
+        if (!saslJaasConfig.isBlank()) {
+            config.put(SaslConfigs.SASL_JAAS_CONFIG, saslJaasConfig);
+        }
         return new DefaultKafkaConsumerFactory<>(config);
     }
 

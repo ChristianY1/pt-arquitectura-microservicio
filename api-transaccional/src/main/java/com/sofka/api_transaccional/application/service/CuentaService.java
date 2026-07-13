@@ -1,11 +1,10 @@
 package com.sofka.api_transaccional.application.service;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
-
 import java.util.List;
 import java.util.Optional;
 
+import com.sofka.api_transaccional.domain.exception.ReglaNegocioException;
+import com.sofka.api_transaccional.domain.exception.RecursoNoEncontradoException;
 import com.sofka.api_transaccional.domain.model.Cliente;
 import com.sofka.api_transaccional.domain.model.Cuenta;
 import com.sofka.api_transaccional.domain.port.in.CuentaPortIn;
@@ -31,19 +30,20 @@ public class CuentaService implements CuentaPortIn {
      * @param cuenta datos de la cuenta a crear
      * @param identificacionCliente cédula del cliente al que se le crea la cuenta
      * @return la cuenta creada, con el identificador generado
-     * @throws ResponseStatusException 400 si el número de cuenta es inválido, ya existe
-     *                                  o el cliente no está activo; 404 si el cliente no existe
+     * @throws ReglaNegocioException si el número de cuenta es inválido, ya existe
+     *                                o el cliente no está activo
+     * @throws RecursoNoEncontradoException si el cliente no existe
      */
     @Override
     public Cuenta crearCuenta(Cuenta cuenta, String identificacionCliente) {
         validarNumeroCuenta(cuenta.getNumeroCuenta());
         if (cuentaRepositoryPortOut.buscarCuentaPorNumero(cuenta.getNumeroCuenta()).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ya existe una cuenta con este número");
+            throw new ReglaNegocioException("Ya existe una cuenta con este número");
         }
         Cliente cliente = clienteRepositoryPortOut.buscarClientePorIdentificacion(identificacionCliente)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente no encontrado"));
+                .orElseThrow(() -> new RecursoNoEncontradoException("Cliente no encontrado"));
         if (!cliente.isEstado()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El cliente no está activo");
+            throw new ReglaNegocioException("El cliente no está activo");
         }
         cuenta.setClienteId(cliente.getClienteId());
         return cuentaRepositoryPortOut.crearCuenta(cuenta);
@@ -76,7 +76,7 @@ public class CuentaService implements CuentaPortIn {
      *
      * @param cuenta datos actualizados de la cuenta
      * @return la cuenta actualizada
-     * @throws ResponseStatusException 400 si el número de cuenta es inválido
+     * @throws ReglaNegocioException si el número de cuenta es inválido
      */
     @Override
     public Cuenta actualizarCuenta(Cuenta cuenta) {
@@ -109,11 +109,11 @@ public class CuentaService implements CuentaPortIn {
      * Valida que el número de cuenta no sea nulo ni esté en blanco.
      *
      * @param numeroCuenta número de cuenta a validar
-     * @throws ResponseStatusException 400 si el número de cuenta es nulo o está en blanco
+     * @throws ReglaNegocioException si el número de cuenta es nulo o está en blanco
      */
     private void validarNumeroCuenta(String numeroCuenta) {
         if (numeroCuenta == null || numeroCuenta.isBlank()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El número de cuenta es obligatorio");
+            throw new ReglaNegocioException("El número de cuenta es obligatorio");
         }
     }
 

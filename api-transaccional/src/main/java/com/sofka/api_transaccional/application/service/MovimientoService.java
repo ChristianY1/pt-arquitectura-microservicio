@@ -1,14 +1,13 @@
 package com.sofka.api_transaccional.application.service;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
+import com.sofka.api_transaccional.domain.exception.ReglaNegocioException;
+import com.sofka.api_transaccional.domain.exception.RecursoNoEncontradoException;
 import com.sofka.api_transaccional.domain.model.Cuenta;
 import com.sofka.api_transaccional.domain.model.Movimiento;
 import com.sofka.api_transaccional.domain.model.ReporteMovimiento;
@@ -33,16 +32,17 @@ public class MovimientoService implements MovimientoPortIn {
      *
      * @param movimiento datos del movimiento a crear (con el id de la cuenta ya asignado)
      * @return el movimiento creado, con el saldo disponible calculado
-     * @throws ResponseStatusException 404 si la cuenta no existe; 400 si la cuenta no está
-     *                                  activa o si el movimiento deja el saldo en negativo
+     * @throws RecursoNoEncontradoException si la cuenta no existe
+     * @throws ReglaNegocioException si la cuenta no está activa o si el movimiento
+     *                                deja el saldo en negativo
      */
     @Override
     public Movimiento crearMovimiento(Movimiento movimiento) {
         Cuenta cuenta = cuentaRepositoryPortOut.buscarCuenta(movimiento.getCuentaId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cuenta no encontrada"));
+                .orElseThrow(() -> new RecursoNoEncontradoException("Cuenta no encontrada"));
 
         if (!cuenta.isEstado()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La cuenta no está activa");
+            throw new ReglaNegocioException("La cuenta no está activa");
         }
 
         BigDecimal saldoBase = movimientoRepositoryPortOut.buscarUltimoMovimientoPorCuenta(movimiento.getCuentaId())
@@ -52,7 +52,7 @@ public class MovimientoService implements MovimientoPortIn {
         BigDecimal nuevoSaldoDisponible = saldoBase.add(movimiento.getValor());
 
         if (nuevoSaldoDisponible.compareTo(BigDecimal.ZERO) < 0) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Saldo no disponible");
+            throw new ReglaNegocioException("Saldo no disponible");
         }
 
         movimiento.setSaldoDisponible(nuevoSaldoDisponible);
@@ -110,13 +110,13 @@ public class MovimientoService implements MovimientoPortIn {
      * @param desde fecha y hora de inicio del rango (inclusive)
      * @param hasta fecha y hora de fin del rango (inclusive)
      * @return los movimientos encontrados en el rango; una lista vacía si no hay ninguno
-     * @throws ResponseStatusException 400 si la diferencia entre la fecha inicio y fecha fin
-     *                                  supera los 30 días
+     * @throws ReglaNegocioException si la diferencia entre la fecha inicio y fecha fin
+     *                                supera los 30 días
      */
     @Override
     public List<ReporteMovimiento> buscarReporteMovimientos(String identificacion, LocalDateTime desde, LocalDateTime hasta) {
         if (ChronoUnit.DAYS.between(desde, hasta) > 30) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El rango de fechas no puede ser mayor a 30 días");
+            throw new ReglaNegocioException("El rango de fechas no puede ser mayor a 30 días");
         }
         return movimientoRepositoryPortOut.buscarReporteMovimientos(identificacion, desde, hasta);
     }

@@ -1,12 +1,10 @@
 package com.sofka.api_transaccional.infraestructura.adapter.out.persistence;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import com.sofka.api_transaccional.domain.exception.RecursoNoEncontradoException;
 import com.sofka.api_transaccional.domain.model.Movimiento;
 import com.sofka.api_transaccional.domain.model.ReporteMovimiento;
 import com.sofka.api_transaccional.domain.port.out.MovimientoRepositoryPortOut;
@@ -34,12 +32,12 @@ public class MovimientoRepositoryAdapter implements MovimientoRepositoryPortOut 
      *
      * @param movimiento datos del movimiento a guardar
      * @return el movimiento guardado, con el identificador generado por la base de datos
-     * @throws ResponseStatusException 404 si la cuenta asociada no existe
+     * @throws RecursoNoEncontradoException si la cuenta asociada no existe
      */
     @Override
     public Movimiento crearMovimiento(Movimiento movimiento) {
         if (!cuentaJpaRepository.existsById(movimiento.getCuentaId())) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cuenta no encontrada");
+            throw new RecursoNoEncontradoException("Cuenta no encontrada");
         }
         MovimientoEntity movimientoEntity = movimientoMapper.toEntityMovimiento(movimiento);
         return movimientoMapper.toDomainMovimiento(movimientoJpaRepository.save(movimientoEntity));
@@ -63,12 +61,12 @@ public class MovimientoRepositoryAdapter implements MovimientoRepositoryPortOut 
      *
      * @param movimiento datos actualizados del movimiento
      * @return el movimiento actualizado
-     * @throws ResponseStatusException 404 si el movimiento no existe
+     * @throws RecursoNoEncontradoException si el movimiento no existe
      */
     @Override
     public Movimiento actualizarMovimiento(Movimiento movimiento) {
         Movimiento movimientoExistente = buscarMovimiento(movimiento.getMovimientoId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Movimiento no encontrado"));
+                .orElseThrow(() -> new RecursoNoEncontradoException("Movimiento no encontrado"));
         movimiento.setCuentaId(movimientoExistente.getCuentaId());
         movimiento.setSaldoDisponible(movimientoExistente.getSaldoDisponible());
         MovimientoEntity movimientoEntity = movimientoMapper.toEntityMovimiento(movimiento);
@@ -79,12 +77,12 @@ public class MovimientoRepositoryAdapter implements MovimientoRepositoryPortOut 
      * Elimina de la base de datos un movimiento por su identificador.
      *
      * @param movimientoId id del movimiento a eliminar
-     * @throws ResponseStatusException 404 si el movimiento no existe
+     * @throws RecursoNoEncontradoException si el movimiento no existe
      */
     @Override
     public void eliminarMovimiento(Long movimientoId) {
         if (buscarMovimiento(movimientoId).isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Movimiento no encontrado");
+            throw new RecursoNoEncontradoException("Movimiento no encontrado");
         }
         movimientoJpaRepository.deleteById(movimientoId);
     }
