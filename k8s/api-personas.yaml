@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-personas
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-personas
+  template:
+    metadata:
+      labels:
+        app: api-personas
+    spec:
+      containers:
+        - name: api-personas
+          image: acrchristianmicropt2026.azurecr.io/api-personas:v1
+          ports:
+            - containerPort: 8081
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://pg-arqmicro2026.postgres.database.azure.com:5432/db-personas?sslmode=require"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "pgadmin"
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: POSTGRES_PASSWORD
+            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+              value: "eh-arqmicro2026.servicebus.windows.net:9093"
+            - name: SPRING_KAFKA_PROPERTIES_SECURITY_PROTOCOL
+              value: "SASL_SSL"
+            - name: SPRING_KAFKA_PROPERTIES_SASL_MECHANISM
+              value: "PLAIN"
+            - name: SPRING_KAFKA_PROPERTIES_SASL_JAAS_CONFIG
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: KAFKA_JAAS_CONFIG
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-personas
+spec:
+  type: LoadBalancer
+  selector:
+    app: api-personas
+  ports:
+    - port: 8081
+      targetPort: 8081

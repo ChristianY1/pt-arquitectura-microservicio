@@ -43,5 +43,27 @@ steps:
   workingDirectory: api-transaccional
   displayName: "Build y test de api-transaccional"
 
+# CD - Build, push a ACR y deploy a AKS
+- task: AzureCLI@2
+  displayName: "Build, push y deploy a AKS"
+  inputs:
+    azureSubscription: 'conexion-azure-microservicios'
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: |
+      az acr login --name acrchristianmicropt2026
 
+      docker build -t acrchristianmicropt2026.azurecr.io/api-personas:$(Build.BuildId) -f api-personas/Dockerfile .
+      docker push acrchristianmicropt2026.azurecr.io/api-personas:$(Build.BuildId)
+
+      docker build -t acrchristianmicropt2026.azurecr.io/api-transaccional:$(Build.BuildId) -f api-transaccional/Dockerfile .
+      docker push acrchristianmicropt2026.azurecr.io/api-transaccional:$(Build.BuildId)
+
+      az aks get-credentials --resource-group rg-arquitectura-microservicios --name aks-arquitectura-microservicios-v2 --overwrite-existing
+
+      kubectl apply -f k8s/api-personas.yaml
+      kubectl apply -f k8s/api-transaccional.yaml
+
+      kubectl set image deployment/api-personas api-personas=acrchristianmicropt2026.azurecr.io/api-personas:$(Build.BuildId)
+      kubectl set image deployment/api-transaccional api-transaccional=acrchristianmicropt2026.azurecr.io/api-transaccional:$(Build.BuildId)
 
